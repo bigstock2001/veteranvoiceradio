@@ -7,10 +7,15 @@ import StickyPlayerBar from "@/components/StickyPlayerBar";
 
 export const metadata: Metadata = {
   title: "Veteran Voice Radio",
-  description: "Veteran-powered radio network featuring Semper Fi Country and Ranger Rockwave.",
+  description:
+    "Veteran-powered radio network featuring Semper Fi Country and Ranger Rockwave.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
@@ -36,6 +41,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <a className="navLink" href="/stations/ranger-rockwave">
                     Ranger Rockwave
                   </a>
+
+                  {/* DJs Dropdown */}
+                  <div className="vvrDropdown" aria-label="DJs menu">
+                    <button
+                      type="button"
+                      className="navLink vvrDropdownTrigger"
+                      aria-haspopup="menu"
+                    >
+                      DJs
+                    </button>
+
+                    <div className="vvrDropdownMenu" role="menu">
+                      <a
+                        className="vvrDropdownItem"
+                        role="menuitem"
+                        href="/djs/ranger-rockwave"
+                      >
+                        Ranger Rockwave
+                      </a>
+                      <a
+                        className="vvrDropdownItem"
+                        role="menuitem"
+                        href="/djs/semper-fi-country"
+                      >
+                        Semper Fi Country
+                      </a>
+                    </div>
+                  </div>
+
                   <a className="navLink" href="/about">
                     About
                   </a>
@@ -44,6 +78,83 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </a>
                 </nav>
               </div>
+
+              {/* Scoped dropdown CSS (keeps DJs inline + prevents hover drop-close) */}
+              <style>{`
+                /* Make dropdown wrapper behave like the other inline nav items */
+                .vvrDropdown {
+                  position: relative;
+                  display: inline-flex;
+                  align-items: center;
+                }
+
+                .vvrDropdownTrigger {
+                  background: transparent;
+                  border: 0;
+                  padding: 0;
+                  margin: 0;
+                  cursor: pointer;
+                  font: inherit;
+                  line-height: inherit;
+                }
+
+                /* Hidden by default */
+                .vvrDropdownMenu {
+                  position: absolute;
+                  left: 0;
+                  top: 100%;
+                  margin-top: 0;
+                  z-index: 9999;
+
+                  display: none;
+                  flex-direction: column;
+                  gap: 6px;
+
+                  min-width: 220px;
+                  padding: 10px;
+                  border-radius: 12px;
+
+                  background: rgba(15, 18, 25, 0.98);
+                  border: 1px solid rgba(255, 255, 255, 0.12);
+                  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+                  backdrop-filter: blur(10px);
+                }
+
+                /* Hover/focus opens menu */
+                .vvrDropdown:hover .vvrDropdownMenu,
+                .vvrDropdown:focus-within .vvrDropdownMenu {
+                  display: flex;
+                }
+
+                /* Hover buffer so moving mouse down doesn't close the menu */
+                .vvrDropdownMenu::before {
+                  content: "";
+                  position: absolute;
+                  left: 0;
+                  top: -12px;
+                  width: 100%;
+                  height: 12px;
+                }
+
+                .vvrDropdownItem {
+                  display: block;
+                  width: 100%;
+                  padding: 10px 12px;
+                  border-radius: 10px;
+                  text-decoration: none;
+
+                  color: rgba(255, 255, 255, 0.92);
+                  font-weight: 600;
+                  line-height: 1.2;
+                  white-space: nowrap;
+                }
+
+                .vvrDropdownItem:hover,
+                .vvrDropdownItem:focus {
+                  background: rgba(255, 255, 255, 0.10);
+                  outline: none;
+                }
+              `}</style>
             </header>
 
             <main className="main">{children}</main>
@@ -51,7 +162,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <footer className="footer">
               <div className="container footerInner">
                 <div className="subtle">
-                  © {new Date().getFullYear()} Veteran Voice Radio. Built on Vercel.
+                  © {new Date().getFullYear()} Veteran Voice Radio. Built on
+                  Vercel.
                 </div>
                 <div className="subtle">Professional. Fun. Veteran-powered.</div>
               </div>
