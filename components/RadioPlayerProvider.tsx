@@ -140,7 +140,11 @@ export default function RadioPlayerProvider({ children }: { children: React.Reac
       const a = document.createElement("audio");
       a.preload = "none";
       a.crossOrigin = "anonymous";
-      a.playsInline = true;
+
+      // FIX: HTMLAudioElement does NOT have a typed playsInline property (TypeScript error in Vercel).
+      // If you want the inline hint for iOS/Safari, set the attribute safely:
+      a.setAttribute("playsinline", "true");
+
       a.src = s.streamUrl;
       a.volume = volume;
 
