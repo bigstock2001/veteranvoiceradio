@@ -1,6 +1,7 @@
 // app/layout.tsx
 
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 import RadioPlayerProvider from "@/components/RadioPlayerProvider";
 import StickyPlayerBar from "@/components/StickyPlayerBar";
@@ -32,15 +33,23 @@ export default function RootLayout({
                 </div>
 
                 <nav className="navLinks" aria-label="Main">
-                  <a className="navLink" href="/">
+                  <Link className="navLink" href="/">
                     Home
-                  </a>
-                  <a className="navLink" href="/stations/semper-fi-country">
+                  </Link>
+
+                  <Link
+                    className="navLink"
+                    href="/stations/semper-fi-country"
+                  >
                     Semper Fi Country
-                  </a>
-                  <a className="navLink" href="/stations/ranger-rockwave">
+                  </Link>
+
+                  <Link
+                    className="navLink"
+                    href="/stations/ranger-rockwave"
+                  >
                     Ranger Rockwave
-                  </a>
+                  </Link>
 
                   {/* DJs Dropdown */}
                   <div className="vvrDropdown" aria-label="DJs menu">
@@ -53,35 +62,36 @@ export default function RootLayout({
                     </button>
 
                     <div className="vvrDropdownMenu" role="menu">
-                      <a
+                      <Link
                         className="vvrDropdownItem"
                         role="menuitem"
                         href="/djs/ranger-rockwave"
                       >
                         Ranger Rockwave
-                      </a>
-                      <a
+                      </Link>
+
+                      <Link
                         className="vvrDropdownItem"
                         role="menuitem"
                         href="/djs/semper-fi-country"
                       >
                         Semper Fi Country
-                      </a>
+                      </Link>
                     </div>
                   </div>
 
-                  <a className="navLink" href="/about">
+                  <Link className="navLink" href="/about">
                     About
-                  </a>
-                  <a className="navLink" href="/donate">
+                  </Link>
+
+                  <Link className="navLink" href="/donate">
                     Donate
-                  </a>
+                  </Link>
                 </nav>
               </div>
 
-              {/* Scoped dropdown CSS (keeps DJs inline + prevents hover drop-close) */}
+              {/* Scoped dropdown CSS */}
               <style>{`
-                /* Make dropdown wrapper behave like the other inline nav items */
                 .vvrDropdown {
                   position: relative;
                   display: inline-flex;
@@ -98,12 +108,10 @@ export default function RootLayout({
                   line-height: inherit;
                 }
 
-                /* Hidden by default */
                 .vvrDropdownMenu {
                   position: absolute;
                   left: 0;
                   top: 100%;
-                  margin-top: 0;
                   z-index: 9999;
 
                   display: none;
@@ -120,13 +128,11 @@ export default function RootLayout({
                   backdrop-filter: blur(10px);
                 }
 
-                /* Hover/focus opens menu */
                 .vvrDropdown:hover .vvrDropdownMenu,
                 .vvrDropdown:focus-within .vvrDropdownMenu {
                   display: flex;
                 }
 
-                /* Hover buffer so moving mouse down doesn't close the menu */
                 .vvrDropdownMenu::before {
                   content: "";
                   position: absolute;
@@ -162,8 +168,7 @@ export default function RootLayout({
             <footer className="footer">
               <div className="container footerInner">
                 <div className="subtle">
-                  © {new Date().getFullYear()} Veteran Voice Radio. Built on
-                  Vercel.
+                  © {new Date().getFullYear()} Veteran Voice Radio. Built on Vercel.
                 </div>
                 <div className="subtle">Professional. Fun. Veteran-powered.</div>
               </div>

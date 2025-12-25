@@ -4,8 +4,14 @@ import { notFound } from "next/navigation";
 import { getStation } from "@/lib/stations";
 import StationHeroPlayer from "@/components/StationHeroPlayer";
 
-export default function StationPage({ params }: { params: { slug: string } }) {
-  const station = getStation(params.slug);
+type StationPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function StationPage({ params }: StationPageProps) {
+  const { slug } = await params;
+
+  const station = getStation(slug);
   if (!station) return notFound();
 
   return (
@@ -27,7 +33,9 @@ export default function StationPage({ params }: { params: { slug: string } }) {
             <div className="heroQuick">
               <div className="quickCard">
                 <div className="quickTitle">Built for listening</div>
-                <div className="subtle">Player stays visible and never gets buried.</div>
+                <div className="subtle">
+                  Player stays visible and never gets buried.
+                </div>
               </div>
               <div className="quickCard">
                 <div className="quickTitle">Professional + fun</div>
@@ -49,12 +57,16 @@ export default function StationPage({ params }: { params: { slug: string } }) {
             <div className="lineupCard">
               <div className="lineupTime">Now</div>
               <div className="lineupShow">Live Programming</div>
-              <div className="subtle">We’ll connect this to your real schedule next.</div>
+              <div className="subtle">
+                We’ll connect this to your real schedule next.
+              </div>
             </div>
             <div className="lineupCard">
               <div className="lineupTime">Next</div>
               <div className="lineupShow">Featured Show Block</div>
-              <div className="subtle">Cards will be driven by data (file or CMS).</div>
+              <div className="subtle">
+                Cards will be driven by data (file or CMS).
+              </div>
             </div>
             <div className="lineupCard">
               <div className="lineupTime">Later</div>
@@ -69,15 +81,21 @@ export default function StationPage({ params }: { params: { slug: string } }) {
           <div className="featureGrid">
             <div className="featureCard">
               <div className="featureTitle">Request a Song</div>
-              <div className="subtle">We’ll add a clean form that routes to email/Sheet.</div>
+              <div className="subtle">
+                We’ll add a clean form that routes to email/Sheet.
+              </div>
             </div>
             <div className="featureCard">
               <div className="featureTitle">Submit Music</div>
-              <div className="subtle">Artist submission workflow—simple and professional.</div>
+              <div className="subtle">
+                Artist submission workflow—simple and professional.
+              </div>
             </div>
             <div className="featureCard">
               <div className="featureTitle">Support the Mission</div>
-              <div className="subtle">Sponsors + donate page designed for trust.</div>
+              <div className="subtle">
+                Sponsors + donate page designed for trust.
+              </div>
             </div>
           </div>
         </section>
