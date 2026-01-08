@@ -1,12 +1,82 @@
 import Link from "next/link";
 import { STATIONS } from "@/lib/stations";
+import { sanityFetch } from "@/lib/sanity";
 
-export default function HomePage() {
+function normalizeArtist(a) {
+  const slug = a?.slug?.current?.trim?.() || "";
+  if (!slug) return null;
+
+  const stations = Array.isArray(a?.stations) ? a.stations : [];
+  const stationSlugs = stations
+    .map((s) => String(s || "").trim())
+    .filter((s) => s === "semper-fi-country" || s === "ranger-rockwave");
+
+  if (!stationSlugs.length) return null;
+
+  return {
+    name: a?.name || "Artist",
+    slug,
+    stationSlugs,
+    bio: a?.bio || "",
+    featured: !!a?.featured,
+    imageUrl: a?.imageUrl || "",
+    socials: {
+      website: a?.socials?.website || "",
+      spotify: a?.socials?.spotify || "",
+      appleMusic: a?.socials?.appleMusic || "",
+      instagram: a?.socials?.instagram || "",
+      facebook: a?.socials?.facebook || "",
+      youtube: a?.socials?.youtube || "",
+    },
+  };
+}
+
+function stationLabel(stationSlugs) {
+  const hasSemper = stationSlugs.includes("semper-fi-country");
+  const hasRanger = stationSlugs.includes("ranger-rockwave");
+  if (hasSemper && hasRanger) return "Featured on both stations";
+  if (hasSemper) return "Semper Fi Country";
+  return "Ranger Rockwave";
+}
+
+function pickPrimaryLink(socials) {
+  // Prioritize sponsor-friendly: Spotify first, then website, then Instagram
+  if (socials?.spotify) return { label: "Spotify", href: socials.spotify };
+  if (socials?.website) return { label: "Website", href: socials.website };
+  if (socials?.instagram) return { label: "Instagram", href: socials.instagram };
+  return null;
+}
+
+export default async function HomePage() {
   const DONATE_HREF = "https://www.paypal.com/donate/?hosted_button_id=KG8935FEPSBQ6";
   const EIN = "EIN: 33-4046922";
 
   const MISSION =
     "We honor service through sound — helping veterans heal, reconnect, and rediscover purpose by amplifying the music and stories behind the uniform.";
+
+  // Featured Artists from Sanity (safe: page still loads if Sanity missing)
+  const groqFeaturedArtists = `*[_type=="artist" && featured==true] | order(name asc)[0...6]{
+    name,
+    slug,
+    stations,
+    bio,
+    featured,
+    socials{
+      website,
+      spotify,
+      appleMusic,
+      instagram,
+      facebook,
+      youtube
+    },
+    "imageUrl": image.asset->url
+  }`;
+
+  const resArtists = await sanityFetch(groqFeaturedArtists);
+  const featuredArtists =
+    resArtists.ok && resArtists.data
+      ? resArtists.data.map(normalizeArtist).filter(Boolean)
+      : [];
 
   return (
     <div className="container pagePad">
@@ -80,6 +150,117 @@ export default function HomePage() {
             <div className="miniNote">Tip: on mobile, start audio first — then browse shows & mission.</div>
           </div>
         </div>
+      </section>
+
+      {/* FEATURED ARTISTS */}
+      <section className="section">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <div className="sectionTitle">Featured Artists</div>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <Link className="btn btnGhost" href="/artists">
+              View All Artists
+            </Link>
+            <Link className="btn btnGhost" href={`/stations/${STATIONS[0].slug}`}>
+              Listen Live
+            </Link>
+          </div>
+        </div>
+
+        <div className="subtle" style={{ marginTop: 8 }}>
+          Spotlighting veteran artists featured on Veteran Voice Radio.
+        </div>
+
+        {!featuredArtists.length ? (
+          <div className="note" style={{ marginTop: 12 }}>
+            {resArtists.ok
+              ? "No featured artists yet — add artists in Sanity and mark them as Featured."
+              : "Featured artists will appear here once Sanity is connected (or env vars are set)."}
+          </div>
+        ) : (
+          <div className="featureGrid" style={{ marginTop: 14 }}>
+            {featuredArtists.map((a) => {
+              const primary = pickPrimaryLink(a.socials);
+              return (
+                <div key={a.slug} className="featureCard">
+                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    {a.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={a.imageUrl}
+                        alt={a.name}
+                        width={56}
+                        height={56}
+                        style={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 999,
+                          objectFit: "cover",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: 56,
+                          height: 56,
+                          borderRadius: 999,
+                          background: "rgba(255,255,255,0.08)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          display: "grid",
+                          placeItems: "center",
+                          fontWeight: 900,
+                        }}
+                      >
+                        {a.name?.[0]?.toUpperCase?.() || "A"}
+                      </div>
+                    )}
+
+                    <div>
+                      <div style={{ fontWeight: 900, fontSize: 15 }}>{a.name}</div>
+                      <div className="subtle" style={{ marginTop: 2 }}>
+                        {stationLabel(a.stationSlugs)}
+                      </div>
+                    </div>
+                  </div>
+
+                  {a.bio ? (
+                    <div className="subtle" style={{ marginTop: 10 }}>
+                      {a.bio}
+                    </div>
+                  ) : null}
+
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
+                    <Link className="btn btnGhost" href="/artists">
+                      Artist Directory
+                    </Link>
+
+                    {primary ? (
+                      <a className="btn btnGhost" href={primary.href} target="_blank" rel="noreferrer">
+                        {primary.label}
+                      </a>
+                    ) : null}
+
+                    {/* If artist appears on one station only, link that station */}
+                    {a.stationSlugs.length === 1 ? (
+                      <Link className="btn btnGhost" href={`/stations/${a.stationSlugs[0]}`}>
+                        Listen
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* NONPROFIT: WHY WE EXIST */}
