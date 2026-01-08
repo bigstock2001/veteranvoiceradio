@@ -2,36 +2,72 @@ import Link from "next/link";
 import { STATIONS } from "@/lib/stations";
 import { sanityFetch } from "@/lib/sanity";
 
-function normalizeArtist(a) {
-  const slug = a?.slug?.current?.trim?.() || "";
+type StationSlug = "semper-fi-country" | "ranger-rockwave";
+
+type SanityArtist = {
+  name?: string;
+  slug?: { current?: string };
+  stations?: string[];
+  bio?: string;
+  featured?: boolean;
+  socials?: {
+    website?: string;
+    spotify?: string;
+    appleMusic?: string;
+    instagram?: string;
+    facebook?: string;
+    youtube?: string;
+  };
+  imageUrl?: string;
+};
+
+type Artist = {
+  name: string;
+  slug: string;
+  stationSlugs: StationSlug[];
+  bio: string;
+  featured: boolean;
+  imageUrl: string;
+  socials: {
+    website: string;
+    spotify: string;
+    appleMusic: string;
+    instagram: string;
+    facebook: string;
+    youtube: string;
+  };
+};
+
+function normalizeArtist(a: SanityArtist): Artist | null {
+  const slug = a.slug?.current?.trim?.() || "";
   if (!slug) return null;
 
-  const stations = Array.isArray(a?.stations) ? a.stations : [];
+  const stations = Array.isArray(a.stations) ? a.stations : [];
   const stationSlugs = stations
     .map((s) => String(s || "").trim())
-    .filter((s) => s === "semper-fi-country" || s === "ranger-rockwave");
+    .filter((s): s is StationSlug => s === "semper-fi-country" || s === "ranger-rockwave");
 
   if (!stationSlugs.length) return null;
 
   return {
-    name: a?.name || "Artist",
+    name: a.name || "Artist",
     slug,
     stationSlugs,
-    bio: a?.bio || "",
-    featured: !!a?.featured,
-    imageUrl: a?.imageUrl || "",
+    bio: a.bio || "",
+    featured: !!a.featured,
+    imageUrl: a.imageUrl || "",
     socials: {
-      website: a?.socials?.website || "",
-      spotify: a?.socials?.spotify || "",
-      appleMusic: a?.socials?.appleMusic || "",
-      instagram: a?.socials?.instagram || "",
-      facebook: a?.socials?.facebook || "",
-      youtube: a?.socials?.youtube || "",
+      website: a.socials?.website || "",
+      spotify: a.socials?.spotify || "",
+      appleMusic: a.socials?.appleMusic || "",
+      instagram: a.socials?.instagram || "",
+      facebook: a.socials?.facebook || "",
+      youtube: a.socials?.youtube || "",
     },
   };
 }
 
-function stationLabel(stationSlugs) {
+function stationLabel(stationSlugs: StationSlug[]) {
   const hasSemper = stationSlugs.includes("semper-fi-country");
   const hasRanger = stationSlugs.includes("ranger-rockwave");
   if (hasSemper && hasRanger) return "Featured on both stations";
@@ -39,11 +75,10 @@ function stationLabel(stationSlugs) {
   return "Ranger Rockwave";
 }
 
-function pickPrimaryLink(socials) {
-  // Prioritize sponsor-friendly: Spotify first, then website, then Instagram
-  if (socials?.spotify) return { label: "Spotify", href: socials.spotify };
-  if (socials?.website) return { label: "Website", href: socials.website };
-  if (socials?.instagram) return { label: "Instagram", href: socials.instagram };
+function pickPrimaryLink(socials: Artist["socials"]) {
+  if (socials.spotify) return { label: "Spotify", href: socials.spotify };
+  if (socials.website) return { label: "Website", href: socials.website };
+  if (socials.instagram) return { label: "Instagram", href: socials.instagram };
   return null;
 }
 
@@ -54,7 +89,6 @@ export default async function HomePage() {
   const MISSION =
     "We honor service through sound — helping veterans heal, reconnect, and rediscover purpose by amplifying the music and stories behind the uniform.";
 
-  // Featured Artists from Sanity (safe: page still loads if Sanity missing)
   const groqFeaturedArtists = `*[_type=="artist" && featured==true] | order(name asc)[0...6]{
     name,
     slug,
@@ -72,10 +106,10 @@ export default async function HomePage() {
     "imageUrl": image.asset->url
   }`;
 
-  const resArtists = await sanityFetch(groqFeaturedArtists);
-  const featuredArtists =
+  const resArtists = await sanityFetch<SanityArtist[]>(groqFeaturedArtists);
+  const featuredArtists: Artist[] =
     resArtists.ok && resArtists.data
-      ? resArtists.data.map(normalizeArtist).filter(Boolean)
+      ? (resArtists.data.map(normalizeArtist).filter(Boolean) as Artist[])
       : [];
 
   return (
@@ -249,7 +283,6 @@ export default async function HomePage() {
                       </a>
                     ) : null}
 
-                    {/* If artist appears on one station only, link that station */}
                     {a.stationSlugs.length === 1 ? (
                       <Link className="btn btnGhost" href={`/stations/${a.stationSlugs[0]}`}>
                         Listen
