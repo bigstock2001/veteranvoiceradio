@@ -2,7 +2,7 @@
 type SanityEnv = {
   projectId: string;
   dataset: string;
-  apiVersion: string; // "YYYY-MM-DD"
+  apiVersion: string;
   useCdn: boolean;
 };
 
@@ -10,9 +10,8 @@ function getSanityEnv(): SanityEnv | null {
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "";
 
-  // Keep this stable unless you have a reason to change it.
-  // This is the API version date (not "v2024-01-01", just "2024-01-01")
-  const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01";
+  // MUST match Studio API version
+  const apiVersion = "2026-01-08";
 
   if (!projectId || !dataset) return null;
 
@@ -20,16 +19,18 @@ function getSanityEnv(): SanityEnv | null {
     projectId,
     dataset,
     apiVersion,
-    useCdn: true,
+    useCdn: false, // disable CDN while debugging
   };
 }
 
 export async function sanityFetch<T>(
   groq: string,
   params?: Record<string, string | number | boolean>
-): Promise<{ ok: true; data: T | null } | { ok: false; data: null }> {
+) {
   const env = getSanityEnv();
-  if (!env) return { ok: false, data: null };
+  if (!env) {
+    return { ok: false as const, data: null as T | null };
+  }
 
   const base = `https://${env.projectId}.api.sanity.io/v${env.apiVersion}/data/query/${env.dataset}`;
   const url = new URL(base);
@@ -42,17 +43,15 @@ export async function sanityFetch<T>(
   }
 
   try {
-    const res = await fetch(url.toString(), {
-      cache: "no-store",
-      // Later if you want caching:
-      // next: { revalidate: 60 },
-    });
+    const res = await fetch(url.toString(), { cache: "no-store" });
 
-    if (!res.ok) return { ok: false, data: null };
+    if (!res.ok) {
+      return { ok: false as const, data: null as T | null };
+    }
 
     const json = (await res.json()) as { result?: T };
-    return { ok: true, data: (json.result ?? null) as T | null };
-  } catch {
-    return { ok: false, data: null };
+    return { ok: true as const, data: json.result ?? null };
+  } catch (err) {
+    return { ok: false as const, data: null as T | null };
   }
 }
