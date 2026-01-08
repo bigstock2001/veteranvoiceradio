@@ -11,8 +11,15 @@ type CheckData = {
   ok: boolean;
   status?: number | null;
   error?: string | null;
-  count?: number | null;
-  sample?: any;
+
+  totalDocs?: number | null;
+  types?: string[] | null;
+
+  artistCount?: number | null;
+  artistSample?: any;
+
+  djCount?: number | null;
+  djSample?: any;
 };
 
 export default async function SanityCheckPage() {
@@ -20,30 +27,39 @@ export default async function SanityCheckPage() {
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? null;
   const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION ?? "2024-01-01";
 
-  // Simple count query
   const groq = `{
-    "count": count(*[_type=="artist"]),
-    "sample": *[_type=="artist"][0]{ _id, name, slug, stations, featured }
+    "totalDocs": count(*[]),
+    "types": array::unique(*[defined(_type)]._type) | order(@ asc),
+
+    "artistCount": count(*[_type=="artist"]),
+    "artistSample": *[_type=="artist"][0]{ _id, _type, name, slug, stations, featured },
+
+    "djCount": count(*[_type=="dj"]),
+    "djSample": *[_type=="dj"][0]{ _id, _type, name, slug, stationSlug, showName }
   }`;
 
-  const res = await sanityFetch<{ count: number; sample: any }>(groq);
+  const res = await sanityFetch<any>(groq);
 
   const out: CheckData = {
     env: { projectId, dataset, apiVersion },
     ok: res.ok,
     status: (res as any).status ?? null,
     error: (res as any).error ?? null,
-    count: res.data?.count ?? null,
-    sample: res.data?.sample ?? null,
+
+    totalDocs: res.data?.totalDocs ?? null,
+    types: res.data?.types ?? null,
+
+    artistCount: res.data?.artistCount ?? null,
+    artistSample: res.data?.artistSample ?? null,
+
+    djCount: res.data?.djCount ?? null,
+    djSample: res.data?.djSample ?? null,
   };
 
   return (
     <div className="container pagePad">
       <section className="section">
         <div className="sectionTitle">Sanity Check</div>
-        <div className="note" style={{ marginTop: 12 }}>
-          Open this page on production and it will show EXACTLY which Sanity env values the deployed site is using.
-        </div>
 
         <pre
           style={{
@@ -53,14 +69,17 @@ export default async function SanityCheckPage() {
             border: "1px solid rgba(255,255,255,0.15)",
             background: "rgba(255,255,255,0.06)",
             overflow: "auto",
-            maxHeight: 520,
+            maxHeight: 650,
           }}
         >
           {JSON.stringify(out, null, 2)}
         </pre>
 
         <div className="note" style={{ marginTop: 12 }}>
-          What we want to see: ok=true AND count &gt; 0. If ok=false, you’ll also see status/error.
+          Key signals:
+          <br />• If totalDocs is low/0 → wrong dataset (even if name says production)
+          <br />• If djCount &gt; 0 but artistCount = 0 → artists not in this dataset OR drafts only
+          <br />• If “types” list doesn’t include “artist” → there are no published artist docs here
         </div>
       </section>
     </div>
