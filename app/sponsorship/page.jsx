@@ -305,7 +305,7 @@ export default function SponsorshipPage() {
               href="/"
               className="w-full sm:w-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white/90 hover:border-white/30 hover:bg-white/10 transition"
             >
-              Back to Home
+              
             </a>
           </div>
 
