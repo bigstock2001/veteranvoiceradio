@@ -6,31 +6,29 @@ type SanityEnv = {
   useCdn: boolean;
 };
 
-function getSanityEnv(): SanityEnv | null {
+// MUST match your Sanity Vision version (your screenshot shows v2026-01-08)
+export const SANITY_API_VERSION = "2026-01-08";
+
+export function getSanityEnv(): SanityEnv | null {
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "";
-
-  // MUST match Studio API version
-  const apiVersion = "2026-01-08";
 
   if (!projectId || !dataset) return null;
 
   return {
     projectId,
     dataset,
-    apiVersion,
-    useCdn: false, // disable CDN while debugging
+    apiVersion: SANITY_API_VERSION,
+    useCdn: false,
   };
 }
 
 export async function sanityFetch<T>(
   groq: string,
   params?: Record<string, string | number | boolean>
-) {
+): Promise<{ ok: true; data: T | null } | { ok: false; data: null }> {
   const env = getSanityEnv();
-  if (!env) {
-    return { ok: false as const, data: null as T | null };
-  }
+  if (!env) return { ok: false, data: null };
 
   const base = `https://${env.projectId}.api.sanity.io/v${env.apiVersion}/data/query/${env.dataset}`;
   const url = new URL(base);
@@ -44,14 +42,11 @@ export async function sanityFetch<T>(
 
   try {
     const res = await fetch(url.toString(), { cache: "no-store" });
-
-    if (!res.ok) {
-      return { ok: false as const, data: null as T | null };
-    }
+    if (!res.ok) return { ok: false, data: null };
 
     const json = (await res.json()) as { result?: T };
-    return { ok: true as const, data: json.result ?? null };
-  } catch (err) {
-    return { ok: false as const, data: null as T | null };
+    return { ok: true, data: (json.result ?? null) as T | null };
+  } catch {
+    return { ok: false, data: null };
   }
 }
