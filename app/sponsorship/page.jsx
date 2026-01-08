@@ -156,7 +156,7 @@ export default function SponsorshipPage() {
           and community.
         </p>
         <p>
-          📧 <strong>Email:</strong> your@email.com <br />
+          📧 <strong>Email:</strong> donalddunn@veteranvoiceradio.com <br />
           🌐 <strong>Website:</strong> veteranvoiceradio.com
         </p>
       </section>
