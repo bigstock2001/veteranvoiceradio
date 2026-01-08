@@ -1,34 +1,48 @@
 import { sanityFetch } from "@/lib/sanity";
 
-type SanityArtist = {
-  _id?: string;
-  name?: string;
-  slug?: { current?: string };
-  stations?: unknown;
-  featured?: boolean;
-};
+export const metadata = { title: "Sanity Check" };
 
-export const metadata = {
-  title: "Sanity Check",
+type CheckData = {
+  env: {
+    projectId: string | null;
+    dataset: string | null;
+    apiVersion: string | null;
+  };
+  ok: boolean;
+  status?: number | null;
+  error?: string | null;
+  count?: number | null;
+  sample?: any;
 };
 
 export default async function SanityCheckPage() {
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? null;
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? null;
+  const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION ?? "2024-01-01";
+
+  // Simple count query
   const groq = `{
-    "artists": *[_type=="artist"] | order(_updatedAt desc)[0...10]{
-      _id, name, slug, stations, featured
-    },
-    "count": count(*[_type=="artist"])
+    "count": count(*[_type=="artist"]),
+    "sample": *[_type=="artist"][0]{ _id, name, slug, stations, featured }
   }`;
 
-  const res = await sanityFetch<{ artists: SanityArtist[]; count: number }>(groq);
+  const res = await sanityFetch<{ count: number; sample: any }>(groq);
+
+  const out: CheckData = {
+    env: { projectId, dataset, apiVersion },
+    ok: res.ok,
+    status: (res as any).status ?? null,
+    error: (res as any).error ?? null,
+    count: res.data?.count ?? null,
+    sample: res.data?.sample ?? null,
+  };
 
   return (
     <div className="container pagePad">
       <section className="section">
         <div className="sectionTitle">Sanity Check</div>
-
         <div className="note" style={{ marginTop: 12 }}>
-          ok: <strong>{String(res.ok)}</strong>
+          Open this page on production and it will show EXACTLY which Sanity env values the deployed site is using.
         </div>
 
         <pre
@@ -42,11 +56,11 @@ export default async function SanityCheckPage() {
             maxHeight: 520,
           }}
         >
-          {JSON.stringify(res.data, null, 2)}
+          {JSON.stringify(out, null, 2)}
         </pre>
 
         <div className="note" style={{ marginTop: 12 }}>
-          If <strong>ok=false</strong> or <strong>count=0</strong> but Studio has artists, your Vercel env vars are not pointing at the same Sanity project/dataset (or the values include quotes).
+          What we want to see: ok=true AND count &gt; 0. If ok=false, you’ll also see status/error.
         </div>
       </section>
     </div>
