@@ -310,7 +310,7 @@ export default function SponsorshipPage() {
           </div>
 
           <div className="mt-6 text-sm text-white/60">
-            Or email: <span className="text-white/80">info@veteranvoiceradio.com</span>
+             <span className="text-white/80">info@veteranvoiceradio.com</span>
           </div>
         </div>
       </section>
