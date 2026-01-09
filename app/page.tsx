@@ -316,12 +316,12 @@ export default async function HomePage() {
 </div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Link className="btn btnGhost" href="/artists">
-              View Artists
-            </Link>
-            <Link className="btn btnGhost" href={`/stations/${STATIONS[0].slug}`}>
-              Listen Live
-            </Link>
+            <Link className="btn btnGhost glassButton" href="/artists">
+  View Artists
+</Link>
+            <Link className="btn btnGhost glassButton" href="/artists">
+  Listen Live
+</Link>
           </div>
         </div>
 
