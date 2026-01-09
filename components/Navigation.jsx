@@ -24,17 +24,19 @@ export default function Navigation() {
   return (
     <header className="sticky top-0 z-50">
       <div className="mx-auto w-full max-w-6xl px-5 py-4">
-        <div className="container-card px-4 py-3 flex items-center justify-between">
-         <Link
-  href="/"
-  className="font-bold text-lg"
->
-  <span style={{ color: "#f59e0b" }}>
-    Veteran Voice Radio
-  </span>
-</Link>
-
-
+        <div
+          className="container-card px-4 py-3 flex items-center justify-between"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(20,25,40,.75), rgba(20,25,40,.55))",
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          <Link href="/" className="font-bold text-lg">
+            <span style={{ color: "#f59e0b" }}>
+              Veteran Voice Radio
+            </span>
+          </Link>
 
           <nav className="flex items-center gap-6">
             <Link href="/stations" className="hover:opacity-80">
@@ -49,7 +51,7 @@ export default function Navigation() {
               Sponsorship
             </Link>
 
-            {/* DJs dropdown (hover on desktop, tap on mobile) */}
+            {/* DJs dropdown */}
             <div
               className="relative"
               ref={djsRef}
