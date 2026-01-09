@@ -25,10 +25,10 @@ body{
     background:
     /* DARK SCRIM FOR READABILITY */
     linear-gradient(
-      180deg,
-      rgba(5,8,15,.80) 0%,
-      rgba(5,8,15,.72) 45%,
-      rgba(5,8,15,.85) 100%
+  180deg,
+  rgba(2,3,7,.96) 0%,
+  rgba(2,3,7,.92) 45%,
+  rgba(2,3,7,.98) 100%
     ),
 
     url("/images/musicbackground.jpg") center / cover no-repeat fixed,
