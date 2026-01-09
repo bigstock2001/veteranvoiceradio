@@ -26,9 +26,9 @@ body{
     /* DARK SCRIM FOR READABILITY */
     linear-gradient(
   180deg,
-  rgba(2,3,7,.96) 0%,
-  rgba(2,3,7,.92) 45%,
-  rgba(2,3,7,.98) 100%
+  rgba(3,5,10,.92) 0%,
+  rgba(3,5,10,.88) 45%,
+  rgba(3,5,10,.95) 100%
     ),
 
     url("/images/musicbackground.jpg") center / cover no-repeat fixed,
