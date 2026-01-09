@@ -159,7 +159,7 @@ export default async function HomePage() {
             Nonprofit • Veteran-Run • Music + Storytelling
           </div>
 
-          <h1 className="h1">Veteran Voice Radio</h1>
+          <h1 style="color:#f59e0b;">Veteran Voice Radio</h1>
 
           <p className="lead">{MISSION}</p>
 
