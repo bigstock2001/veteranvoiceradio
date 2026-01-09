@@ -435,7 +435,7 @@ export default async function HomePage() {
 
         <div className="featureGrid">
           <div className="featureCard">
-            <div className="featureTitle">Music as therapy</div>
+            
             <div className="subtle">
               For many veterans, music is more than entertainment — it’s a way to process trauma, reconnect with
               identity, and rediscover hope.
@@ -462,7 +462,12 @@ export default async function HomePage() {
 
       {/* WHERE SUPPORT GOES */}
       <section className="section">
-        <div className="sectionTitle">Where your support goes</div>
+        <div
+  className="sectionTitle px-4 py-2"
+  style={GLASS_STYLE}
+>
+  Where Your Support Goes
+</div>
 
         <div className="supportGrid">
           <div className="supportCard">
