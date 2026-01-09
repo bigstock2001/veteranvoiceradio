@@ -25,13 +25,15 @@ export default function Navigation() {
     <header className="sticky top-0 z-50">
       <div className="mx-auto w-full max-w-6xl px-5 py-4">
         <div className="container-card px-4 py-3 flex items-center justify-between">
-          <Link
+         <Link
   href="/"
   className="font-bold text-lg"
-  style={{ color: "#f59e0b" }}
 >
-  Veteran Voice Radio
+  <span style={{ color: "#f59e0b" }}>
+    Veteran Voice Radio
+  </span>
 </Link>
+
 
 
           <nav className="flex items-center gap-6">
