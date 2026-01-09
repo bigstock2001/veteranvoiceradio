@@ -1,4 +1,21 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
+
+const GLASS_STYLE: CSSProperties = {
+  backgroundColor: "rgba(8,12,22,.78)",
+  backgroundImage:
+    "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+  backdropFilter: "blur(14px)",
+  WebkitBackdropFilter: "blur(14px)",
+  border: "1px solid rgba(255,255,255,.18)",
+  borderRadius: "14px",
+  boxShadow: "0 10px 30px rgba(0,0,0,.35)",
+};
+
+const GLASS_STYLE_SMALL: CSSProperties = {
+  ...GLASS_STYLE,
+  borderRadius: "12px",
+};
 
 export default function AboutPage() {
   const DONATE_HREF = "https://www.paypal.com/donate/?hosted_button_id=KG8935FEPSBQ6";
@@ -13,7 +30,9 @@ export default function AboutPage() {
       <section className="section">
         <div className="glassBand">
           <div className="bandLeft">
-            <div className="bandTitle">About Veteran Voice Radio</div>
+            <div className="bandTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              About Veteran Voice Radio
+            </div>
             <div className="subtle" style={{ marginTop: 6 }}>
               {MISSION}
             </div>
@@ -36,7 +55,9 @@ export default function AboutPage() {
 
       {/* ABOUT COPY */}
       <section className="section">
-        <div className="sectionTitle">Our Story</div>
+        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          Our Story
+        </div>
 
         <div className="featureGrid">
           <div className="featureCard" style={{ gridColumn: "1 / -1" }}>
@@ -62,7 +83,10 @@ export default function AboutPage() {
 
               <p style={{ marginBottom: 0 }}>
                 Join us as we honor service through sound — uplifting, inspiring, and uniting listeners with the
-                harmonies of healing and purpose. <strong>Tune in, turn up, and support those who’ve served — one song at a time.</strong>
+                harmonies of healing and purpose.{" "}
+                <strong>
+                  Tune in, turn up, and support those who’ve served — one song at a time.
+                </strong>
               </p>
             </div>
           </div>
@@ -71,25 +95,33 @@ export default function AboutPage() {
 
       {/* WHAT WE DO */}
       <section className="section">
-        <div className="sectionTitle">What we do</div>
+        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          What we do
+        </div>
 
         <div className="featureGrid">
           <div className="featureCard">
-            <div className="featureTitle">Veteran artist spotlight</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Veteran artist spotlight
+            </div>
             <div className="subtle">
               We promote music created by veterans and military families, giving artists a real platform to grow.
             </div>
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle">Healing through sound</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Healing through sound
+            </div>
             <div className="subtle">
               Music and storytelling can be a bridge back to identity, connection, and hope — we build that bridge daily.
             </div>
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle">Mission-driven community</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Mission-driven community
+            </div>
             <div className="subtle">
               We’re building a network that feels like home — powered by veterans, supported by listeners, open to all.
             </div>
@@ -99,11 +131,15 @@ export default function AboutPage() {
 
       {/* HOW TO SUPPORT */}
       <section className="section">
-        <div className="sectionTitle">How to support</div>
+        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          How to support
+        </div>
 
         <div className="supportGrid">
           <div className="supportCard">
-            <div className="supportTitle">Donate</div>
+            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Donate
+            </div>
             <div className="subtle">
               Your donation helps keep the stations on air, supports outreach, and expands opportunities for veteran
               creators.
@@ -111,7 +147,9 @@ export default function AboutPage() {
           </div>
 
           <div className="supportCard">
-            <div className="supportTitle">Sponsor</div>
+            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Sponsor
+            </div>
             <div className="subtle">
               Become a sponsor to support the mission while getting your brand in front of a loyal, values-driven
               community.
@@ -119,7 +157,9 @@ export default function AboutPage() {
           </div>
 
           <div className="supportCard">
-            <div className="supportTitle">Share the stations</div>
+            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Share the stations
+            </div>
             <div className="subtle">
               The simplest support: share the station links, invite friends, and help more people find the music.
             </div>
@@ -128,7 +168,9 @@ export default function AboutPage() {
 
         <div className="ctaBar">
           <div>
-            <div className="ctaBarTitle">Support Veteran Voice Radio</div>
+            <div className="ctaBarTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Support Veteran Voice Radio
+            </div>
             <div className="subtle">Every contribution helps us reach more veterans and amplify more voices.</div>
           </div>
 
@@ -150,7 +192,9 @@ export default function AboutPage() {
       <section className="section">
         <div className="glassBand">
           <div className="bandLeft">
-            <div className="bandTitle">Transparency</div>
+            <div className="bandTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Transparency
+            </div>
             <div className="subtle">
               Veteran Voice Radio operates as a nonprofit initiative. We’re committed to transparency as we grow —
               including sponsor info, impact updates, and mission initiatives.

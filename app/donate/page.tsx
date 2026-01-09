@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 export const metadata: Metadata = {
   title: "Donate | Veteran Voice Radio",
@@ -9,16 +10,38 @@ export const metadata: Metadata = {
     "Support Veteran Voice Radio. Your donation helps keep veteran-powered programming on the air and funds outreach to veterans.",
 };
 
+const GLASS_STYLE: CSSProperties = {
+  backgroundColor: "rgba(8,12,22,.78)",
+  backgroundImage:
+    "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+  backdropFilter: "blur(14px)",
+  WebkitBackdropFilter: "blur(14px)",
+  border: "1px solid rgba(255,255,255,.18)",
+  borderRadius: "14px",
+  boxShadow: "0 10px 30px rgba(0,0,0,.35)",
+};
+
+const GLASS_STYLE_SMALL: CSSProperties = {
+  ...GLASS_STYLE,
+  borderRadius: "12px",
+};
+
 export default function DonatePage() {
   return (
     <div className="pagePad">
       <div className="container">
-        <div className="kicker">Support the mission</div>
-        <h1 className="h1">Donate</h1>
+        <div className="kicker px-4 py-2" style={GLASS_STYLE}>
+          Support the mission
+        </div>
+
+        <h1 className="h1" style={{ ...GLASS_STYLE, padding: "12px 16px", display: "inline-block" }}>
+          Donate
+        </h1>
+
         <p className="lead">
-          Veteran Voice Radio exists to honor service through sound — helping veterans heal,
-          reconnect, and rediscover purpose by amplifying the music and stories behind the uniform.
-          If you believe in that mission, your support keeps the stations running and growing.
+          Veteran Voice Radio exists to honor service through sound — helping veterans heal, reconnect, and rediscover
+          purpose by amplifying the music and stories behind the uniform. If you believe in that mission, your support
+          keeps the stations running and growing.
         </p>
 
         <div className="ctaRow" style={{ marginBottom: 18 }}>
@@ -30,44 +53,47 @@ export default function DonatePage() {
           </Link>
         </div>
 
-        <div
-          className="featureGrid"
-          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
-        >
+        <div className="featureGrid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
           <div className="featureCard">
-            <div className="featureTitle">Keep the stations live</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Keep the stations live
+            </div>
             <div className="subtle">
-              Streaming, licensing, hosting, and production tools cost money every month. Your gift
-              helps keep Veteran Voice Radio on the air.
+              Streaming, licensing, hosting, and production tools cost money every month. Your gift helps keep Veteran
+              Voice Radio on the air.
             </div>
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle">Support veteran outreach</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Support veteran outreach
+            </div>
             <div className="subtle">
-              We build community through interviews, music, and stories that remind veterans they’re
-              not alone.
+              We build community through interviews, music, and stories that remind veterans they’re not alone.
             </div>
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle">Fuel growth</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Fuel growth
+            </div>
             <div className="subtle">
-              Donations help expand programming, improve production quality, and grow both Ranger
-              Rockwave and Semper Fi Country.
+              Donations help expand programming, improve production quality, and grow both Ranger Rockwave and Semper Fi
+              Country.
             </div>
           </div>
         </div>
 
         <div id="donate-options" className="section">
-          <div className="sectionTitle">Donation options</div>
+          <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+            Donation options
+          </div>
 
-          <div
-            className="stationGrid"
-            style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}
-          >
+          <div className="stationGrid" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
             <div className="glassCard">
-              <div className="cardTitle">One-time donation</div>
+              <div className="cardTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+                One-time donation
+              </div>
               <p className="subtle" style={{ marginTop: 0 }}>
                 Make a single contribution to support the mission. Any amount helps.
               </p>
@@ -83,13 +109,15 @@ export default function DonatePage() {
               </div>
 
               <p className="note">
-                When you’re ready, tell me what payment method you want (PayPal, Stripe, Donorbox,
-                Givebutter, etc.) and I’ll wire up the real links.
+                When you’re ready, tell me what payment method you want (PayPal, Stripe, Donorbox, Givebutter, etc.) and
+                I’ll wire up the real links.
               </p>
             </div>
 
             <div className="glassCard">
-              <div className="cardTitle">Monthly support</div>
+              <div className="cardTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+                Monthly support
+              </div>
               <p className="subtle" style={{ marginTop: 0 }}>
                 Become a sustaining supporter. Monthly giving helps us plan and grow.
               </p>
@@ -105,45 +133,51 @@ export default function DonatePage() {
               </div>
 
               <p className="note">
-                If you want tiers (e.g., $5 / $10 / $25 / $50), I can build the UI and connect it to
-                Stripe in the next step.
+                If you want tiers (e.g., $5 / $10 / $25 / $50), I can build the UI and connect it to Stripe in the next
+                step.
               </p>
             </div>
           </div>
         </div>
 
         <div className="section">
-          <div className="sectionTitle">Other ways to help</div>
+          <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+            Other ways to help
+          </div>
 
           <div className="featureGrid">
             <div className="featureCard">
-              <div className="featureTitle">Share the stations</div>
-              <div className="subtle">
-                Tell a veteran friend. Post a link. Word of mouth matters more than anything.
+              <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+                Share the stations
               </div>
+              <div className="subtle">Tell a veteran friend. Post a link. Word of mouth matters more than anything.</div>
             </div>
 
             <div className="featureCard">
-              <div className="featureTitle">Corporate support</div>
+              <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+                Corporate support
+              </div>
               <div className="subtle">
                 Want a sponsor package for your business? We can build a tier that fits your goals.
               </div>
             </div>
 
             <div className="featureCard">
-              <div className="featureTitle">Book a guest / partner</div>
+              <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+                Book a guest / partner
+              </div>
               <div className="subtle">
-                Know a veteran musician, author, or organization we should feature? Send them our
-                way.
+                Know a veteran musician, author, or organization we should feature? Send them our way.
               </div>
             </div>
           </div>
 
           <div className="glassCard" style={{ marginTop: 14 }}>
-            <div className="cardTitle">Need to get in touch?</div>
+            <div className="cardTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Need to get in touch?
+            </div>
             <p className="subtle" style={{ marginTop: 0 }}>
-              For sponsorships, partnerships, or questions about donating, contact us and we’ll
-              respond quickly.
+              For sponsorships, partnerships, or questions about donating, contact us and we’ll respond quickly.
             </p>
 
             <div className="ctaRow">
@@ -158,8 +192,8 @@ export default function DonatePage() {
         </div>
 
         <div className="note" style={{ marginTop: 18 }}>
-          Tip: once you decide your donation platform, I’ll update this page to use real checkout
-          links and we can also add a “Donate” button inside the sticky player bar.
+          Tip: once you decide your donation platform, I’ll update this page to use real checkout links and we can also
+          add a “Donate” button inside the sticky player bar.
         </div>
       </div>
     </div>
