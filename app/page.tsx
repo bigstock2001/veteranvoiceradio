@@ -417,8 +417,12 @@ export default async function HomePage() {
 
       {/* NONPROFIT: WHY WE EXIST */}
       <section className="section">
-        <div className="sectionTitle">Why we exist</div>
-
+        <div
+  className="sectionTitle px-4 py-2"
+  style={GLASS_STYLE}
+>
+  Why We Exist
+</div>
         <div className="featureGrid">
           <div className="featureCard">
             <div className="featureTitle">Music as therapy</div>
