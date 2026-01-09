@@ -28,7 +28,7 @@ export default function Navigation() {
           className="container-card px-4 py-3 flex items-center justify-between"
           style={{
             background:
-              "linear-gradient(180deg, rgba(20,25,40,.75), rgba(20,25,40,.55))",
+              "linear-gradient(180deg, rgba(45,52,75,.55), rgba(45,52,75,.38))",
             backdropFilter: "blur(12px)",
           }}
         >
