@@ -22,7 +22,15 @@ html, body{ padding: 0; margin: 0; }
 
 body{
   /* NEW: image + layered light background for depth */
-  background:
+   background:
+    /* DARK SCRIM FOR READABILITY */
+    linear-gradient(
+      180deg,
+      rgba(5,8,15,.80) 0%,
+      rgba(5,8,15,.72) 45%,
+      rgba(5,8,15,.85) 100%
+    ),
+
     url("/images/musicbackground.jpg") center / cover no-repeat fixed,
     radial-gradient(1100px 700px at 18% 12%, var(--glowCool), transparent 58%),
     radial-gradient(900px 620px at 78% 6%, var(--glowWarm), transparent 62%),
@@ -31,12 +39,6 @@ body{
     linear-gradient(180deg, rgba(255,255,255,.02), transparent 30%),
     var(--bg);
 
-  color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-
-  /* needed for the overlay */
-  position: relative;
-}
 
 /* NEW: subtle grain + vignette overlay (pure CSS, no images) */
 body::before{
