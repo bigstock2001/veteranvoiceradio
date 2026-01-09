@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { STATIONS } from "@/lib/stations";
 import { sanityFetch } from "@/lib/sanity";
 
@@ -38,6 +39,22 @@ type Artist = {
     facebook: string;
     youtube: string;
   };
+};
+
+const GLASS_STYLE: CSSProperties = {
+  backgroundColor: "rgba(8,12,22,.78)",
+  backgroundImage:
+    "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+  backdropFilter: "blur(14px)",
+  WebkitBackdropFilter: "blur(14px)",
+  border: "1px solid rgba(255,255,255,.18)",
+  borderRadius: "14px",
+  boxShadow: "0 10px 30px rgba(0,0,0,.35)",
+};
+
+const GLASS_STYLE_SMALL: CSSProperties = {
+  ...GLASS_STYLE,
+  borderRadius: "12px",
 };
 
 function normalizeArtist(a: SanityArtist): Artist | null {
@@ -159,15 +176,7 @@ export default async function HomePage() {
             Nonprofit • Veteran-Run • Music + Storytelling
           </div>
 
-         <div>
-  <span className="homeEyebrowDot" aria-hidden />
-  Nonprofit • Veteran-Run • Music + Storytelling
-</div>
-
-<h1 style={{ color: "#f59e0b" }}>Veteran Voice Radio</h1>
-
-<p className="lead">{MISSION}</p>
-
+          <h1 style={{ color: "#f59e0b" }}>Veteran Voice Radio</h1>
 
           <p className="lead">{MISSION}</p>
 
@@ -188,77 +197,29 @@ export default async function HomePage() {
           <div className="note">Your player stays with you. Pick a station and browse without losing audio.</div>
 
           <div className="trustRow">
-            <div
-  className="sectionTitle px-4 py-2"
-  style={{
-    backgroundColor: "rgba(8,12,22,.78)",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-    backdropFilter: "blur(14px)",
-    border: "1px solid rgba(255,255,255,.18)",
-    borderRadius: "14px",
-  }}
->
-  Veteran-Led
-</div>
+            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+              Veteran-Led
+            </div>
 
-            <div
-  className="sectionTitle px-4 py-2"
-  style={{
-    backgroundColor: "rgba(8,12,22,.78)",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-    backdropFilter: "blur(14px)",
-    border: "1px solid rgba(255,255,255,.18)",
-    borderRadius: "14px",
-  }}
->
-  Listener Supported
-</div>
-           <div
-  className="sectionTitle px-4 py-2"
-  style={{
-    backgroundColor: "rgba(8,12,22,.78)",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-    backdropFilter: "blur(14px)",
-    border: "1px solid rgba(255,255,255,.18)",
-    borderRadius: "14px",
-  }}
->
-  Artist Featured
-</div>
-            <div
-  className="sectionTitle px-4 py-2"
-  style={{
-    backgroundColor: "rgba(8,12,22,.78)",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-    backdropFilter: "blur(14px)",
-    border: "1px solid rgba(255,255,255,.18)",
-    borderRadius: "14px",
-  }}
->
-  Community Focused
-</div>
+            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+              Listener Supported
+            </div>
+
+            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+              Artist Featured
+            </div>
+
+            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+              Community Focused
+            </div>
           </div>
         </div>
 
         <div className="homeHeroRight">
           <div className="glassCard">
-           <div
-  className="cardTitle px-3 py-2"
-  style={{
-    backgroundColor: "rgba(8,12,22,.78)",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-    backdropFilter: "blur(14px)",
-    border: "1px solid rgba(255,255,255,.18)",
-    borderRadius: "12px",
-  }}
->
-  Choose your station
-</div>
+            <div className="cardTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Choose your station
+            </div>
 
             <div className="stationGrid">
               {STATIONS.map((s) => (
@@ -301,27 +262,18 @@ export default async function HomePage() {
             flexWrap: "wrap",
           }}
         >
-          <div
-  className="sectionTitle px-4 py-2"
-  style={{
-    backgroundColor: "rgba(8,12,22,.78)",
-    backgroundImage:
-      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-    backdropFilter: "blur(14px)",
-    border: "1px solid rgba(255,255,255,.18)",
-    borderRadius: "14px",
-  }}
->
-  Featured Artist
-</div>
+          <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+            Featured Artist
+          </div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link className="btn btnGhost glassButton" href="/artists">
-  View Artists
-</Link>
-            <Link className="btn btnGhost glassButton" href="/artists">
-  Listen Live
-</Link>
+              View Artists
+            </Link>
+
+            <Link className="btn btnGhost glassButton" href={`/stations/${STATIONS[0].slug}`}>
+              Listen Live
+            </Link>
           </div>
         </div>
 
@@ -417,25 +369,15 @@ export default async function HomePage() {
 
       {/* NONPROFIT: WHY WE EXIST */}
       <section className="section">
-        <div
-  className="sectionTitle px-4 py-2"
-  style={{
-  backgroundColor: "rgba(8,12,22,.78)",
-  backgroundImage:
-    "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
-  backdropFilter: "blur(14px)",
-  WebkitBackdropFilter: "blur(14px)",
-  border: "1px solid rgba(255,255,255,.18)",
-  borderRadius: "14px",
-}}
-
->
-  Why We Exist
-</div>
+        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          Why We Exist
+        </div>
 
         <div className="featureGrid">
           <div className="featureCard">
-            
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Music as a lifeline
+            </div>
             <div className="subtle">
               For many veterans, music is more than entertainment — it’s a way to process trauma, reconnect with
               identity, and rediscover hope.
@@ -443,7 +385,9 @@ export default async function HomePage() {
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle">A platform for veteran artists</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              A platform for veteran artists
+            </div>
             <div className="subtle">
               We spotlight music created by veterans and military family members, giving them a real platform — and a
               path toward careers in music and media.
@@ -451,7 +395,9 @@ export default async function HomePage() {
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle">Stories behind the songs</div>
+            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Stories behind the songs
+            </div>
             <div className="subtle">
               We don’t just play tracks. We amplify the strength behind them — the courage, resilience, and creativity
               born from service.
@@ -462,28 +408,31 @@ export default async function HomePage() {
 
       {/* WHERE SUPPORT GOES */}
       <section className="section">
-        <div
-  className="sectionTitle px-4 py-2"
-  style={GLASS_STYLE}
->
-  Where Your Support Goes
-</div>
+        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          Where Your Support Goes
+        </div>
 
         <div className="supportGrid">
           <div className="supportCard">
-            <div className="supportTitle">Broadcast + Hosting</div>
+            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Broadcast + Hosting
+            </div>
             <div className="subtle">Streaming, licensing, distribution, and the tools that keep both stations on air.</div>
           </div>
 
           <div className="supportCard">
-            <div className="supportTitle">Veteran Artist Spotlight</div>
+            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Veteran Artist Spotlight
+            </div>
             <div className="subtle">
               Promotion for veteran creators, interviews, and programming that puts their work in front of the world.
             </div>
           </div>
 
           <div className="supportCard">
-            <div className="supportTitle">Community + Events</div>
+            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Community + Events
+            </div>
             <div className="subtle">
               Projects that elevate veteran voices and strengthen connection through music, storytelling, and service.
             </div>
@@ -492,7 +441,9 @@ export default async function HomePage() {
 
         <div className="ctaBar">
           <div>
-            <div className="ctaBarTitle">Support the mission</div>
+            <div className="ctaBarTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Support the mission
+            </div>
             <div className="subtle">Tune in, turn up, and support those who’ve served — one song at a time.</div>
           </div>
 
@@ -511,7 +462,9 @@ export default async function HomePage() {
       <section className="section">
         <div className="glassBand">
           <div className="bandLeft">
-            <div className="bandTitle">Veteran Voice Radio is a nonprofit.</div>
+            <div className="bandTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+              Veteran Voice Radio is a nonprofit.
+            </div>
             <div className="subtle">
               We’re veteran-run and listener supported. Donations help keep the network on air and expand opportunities
               for veteran artists.
