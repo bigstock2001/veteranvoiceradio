@@ -211,7 +211,7 @@ export default function SponsorshipPage() {
             href="mailto:info@veteranvoiceradio.com"
             className="rounded-xl bg-red-600 px-6 py-3 font-semibold hover:bg-red-700 transition"
           >
-            Email Us About Sponsorship info@veteranvoiceradio.com
+            Email Us About Sponsorship info@veteranvoiceradio.com or donald.l.dunn@gmail.com
           </a>
         </div>
       </section>
