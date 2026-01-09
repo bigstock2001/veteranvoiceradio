@@ -80,17 +80,22 @@ img{ max-width: 100%; display: block; }
 
 .pagePad{ padding: 40px 0 70px; }
 
-.topNav{
+..topNav{
   position: sticky;
   top: 0;
   z-index: 30;
   backdrop-filter: blur(14px);
-  background: linear-gradient(
-    180deg,
-    rgba(10,14,25,.22),
-    rgba(10,14,25,.08)
-  );
-  border-bottom: 1px solid var(--border);
+
+  /* Patriotic glass gradient */
+  background:
+    linear-gradient(
+      90deg,
+      rgba(178,34,34,.35),   /* red */
+      rgba(255,255,255,.25),/* white */
+      rgba(30,58,138,.35)   /* blue */
+    );
+
+  border-bottom: 1px solid rgba(255,255,255,.25);
 }
 .navInner{
   display: flex;
