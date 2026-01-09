@@ -4,10 +4,6 @@ import { sanityFetch } from "@/lib/sanity";
 
 type StationSlug = "semper-fi-country" | "ranger-rockwave";
 
-type Params = {
-  params: { slug: string };
-};
-
 type SanityArtist = {
   name?: string;
   slug?: { current?: string };
@@ -141,8 +137,14 @@ function StationBadge({ stationSlug }: { stationSlug: StationSlug }) {
   );
 }
 
-export default async function StationArtistsPage({ params }: Params) {
-  const stationSlug = params.slug as StationSlug;
+export default async function StationArtistsPage({
+  params,
+}: {
+  // Next 15 typing in your project expects params to be a Promise
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const stationSlug = slug as StationSlug;
 
   if (stationSlug !== "semper-fi-country" && stationSlug !== "ranger-rockwave") {
     return (
@@ -185,10 +187,8 @@ export default async function StationArtistsPage({ params }: Params) {
   const listRaw: Artist[] =
     res.ok && res.data ? (res.data.map(normalizeArtist).filter(Boolean) as Artist[]) : [];
 
-  // Sort by LAST NAME (A–Z), then first name
   const list = [...listRaw].sort((a, b) => lastNameKey(a.name).localeCompare(lastNameKey(b.name)));
 
-  // Group A–Z for jump bar + headings
   const groups = list.reduce<Record<string, Artist[]>>((acc, artist) => {
     const key = alphaBucket(artist.name);
     acc[key] = acc[key] || [];
@@ -227,7 +227,6 @@ export default async function StationArtistsPage({ params }: Params) {
           </div>
         ) : (
           <>
-            {/* A–Z Jump */}
             <div
               style={{
                 marginTop: 14,
@@ -247,15 +246,10 @@ export default async function StationArtistsPage({ params }: Params) {
               ))}
             </div>
 
-            {/* Groups */}
             <div style={{ marginTop: 14 }}>
               {available.map((letter) => (
                 <div key={letter} style={{ marginTop: 18 }}>
-                  <div
-                    id={`letter-${letter}`}
-                    className="sectionTitle"
-                    style={{ fontSize: 16, opacity: 0.95 }}
-                  >
+                  <div id={`letter-${letter}`} className="sectionTitle" style={{ fontSize: 16, opacity: 0.95 }}>
                     {letter === "#" ? "Other" : letter}
                   </div>
 
@@ -264,7 +258,14 @@ export default async function StationArtistsPage({ params }: Params) {
                       const primary = pickPrimaryLink(a.socials);
                       return (
                         <div key={a.slug} className="featureCard">
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              gap: 10,
+                            }}
+                          >
                             <StationBadge stationSlug={stationSlug} />
                             {a.featured ? (
                               <div
