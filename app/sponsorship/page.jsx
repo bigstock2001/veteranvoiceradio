@@ -1,22 +1,22 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "Sponsorship | Spring Freedom Fling — Veteran Voice Radio",
   description:
     "Partner with Veteran Voice Radio to support veterans through music, media, and community.",
 };
 
-function StatCard({ title, value, sub }) {
+function StatCard({ title, value, sub }: { title: string; value: string; sub?: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-sm backdrop-blur">
-      <div className="text-sm uppercase tracking-wider text-white/70">
-        {title}
-      </div>
+      <div className="text-sm uppercase tracking-wider text-white/70">{title}</div>
       <div className="mt-2 text-3xl font-bold">{value}</div>
       {sub ? <div className="mt-2 text-sm text-white/70">{sub}</div> : null}
     </div>
   );
 }
 
-function AudiencePill({ text }) {
+function AudiencePill({ text }: { text: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-center text-sm text-white/90 shadow-sm">
       {text}
@@ -24,7 +24,19 @@ function AudiencePill({ text }) {
   );
 }
 
-function TierCard({ title, price, note, perks, highlight }) {
+function TierCard({
+  title,
+  price,
+  note,
+  perks,
+  highlight,
+}: {
+  title: string;
+  price: string;
+  note?: string;
+  perks: string[];
+  highlight?: boolean;
+}) {
   return (
     <div
       className={[
@@ -37,11 +49,7 @@ function TierCard({ title, price, note, perks, highlight }) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="text-2xl font-bold">{title}</h3>
-          {note ? (
-            <p className="mt-1 text-sm text-red-300">{note}</p>
-          ) : (
-            <p className="mt-1 text-sm text-white/60">Sponsorship Tier</p>
-          )}
+          {note ? <p className="mt-1 text-sm text-red-300">{note}</p> : <p className="mt-1 text-sm text-white/60">Sponsorship Tier</p>}
         </div>
         <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-2 text-lg font-semibold">
           {price}
@@ -172,29 +180,15 @@ export default function SponsorshipPage() {
           <h2 className="text-3xl font-bold">Current Media Reach</h2>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <StatCard
-              title="Radio Listening Sessions"
-              value="3,000+"
-              sub="Across two licensed stations"
-            />
-            <StatCard
-              title="Unique Radio Listeners"
-              value="180+"
-              sub="Verified platform tracking"
-            />
-            <StatCard
-              title="Social Followers"
-              value="15,000+"
-              sub="Facebook + Instagram"
-            />
+            <StatCard title="Radio Listening Sessions" value="3,000+" sub="Across two licensed stations" />
+            <StatCard title="Unique Radio Listeners" value="180+" sub="Verified platform tracking" />
+            <StatCard title="Social Followers" value="15,000+" sub="Facebook + Instagram" />
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h3 className="text-xl font-semibold">Semper Fi Country</h3>
-              <p className="mt-2 text-white/75">
-                Strong listener loyalty and extended sessions.
-              </p>
+              <p className="mt-2 text-white/75">Strong listener loyalty and extended sessions.</p>
               <ul className="mt-4 space-y-2 text-white/85">
                 <li>• 1,800+ listening sessions</li>
                 <li>• 110+ unique listeners</li>
@@ -204,9 +198,7 @@ export default function SponsorshipPage() {
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h3 className="text-xl font-semibold">Ranger Rockwave</h3>
-              <p className="mt-2 text-white/75">
-                Consistent reach into a rock-focused audience.
-              </p>
+              <p className="mt-2 text-white/75">Consistent reach into a rock-focused audience.</p>
               <ul className="mt-4 space-y-2 text-white/85">
                 <li>• 1,600+ listening sessions</li>
                 <li>• 90+ unique listeners</li>
@@ -216,8 +208,7 @@ export default function SponsorshipPage() {
           </div>
 
           <p className="text-sm text-white/60">
-            *All listener data reflects verified streaming sessions and unique
-            listeners tracked through the station’s licensed platform.
+            *All listener data reflects verified streaming sessions and unique listeners tracked through the station’s licensed platform.
           </p>
         </div>
 
@@ -301,16 +292,17 @@ export default function SponsorshipPage() {
             >
               Email Us About Sponsorship
             </a>
-            <a
+
+            <Link
               href="/"
               className="w-full sm:w-auto rounded-xl border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white/90 hover:border-white/30 hover:bg-white/10 transition"
             >
-              
-            </a>
+              Back Home
+            </Link>
           </div>
 
           <div className="mt-6 text-sm text-white/60">
-             <span className="text-white/80">info@veteranvoiceradio.com</span>
+            Email: <span className="text-white/80">info@veteranvoiceradio.com</span>
           </div>
         </div>
       </section>
