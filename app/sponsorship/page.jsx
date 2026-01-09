@@ -6,7 +6,7 @@ export const metadata = {
     "Partner with Veteran Voice Radio to support veterans through music, media, and community.",
 };
 
-function StatCard({ title, value, sub }: { title: string; value: string; sub?: string }) {
+function StatCard({ title, value, sub }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-sm backdrop-blur">
       <div className="text-sm uppercase tracking-wider text-white/70">{title}</div>
@@ -16,7 +16,7 @@ function StatCard({ title, value, sub }: { title: string; value: string; sub?: s
   );
 }
 
-function AudiencePill({ text }: { text: string }) {
+function AudiencePill({ text }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-center text-sm text-white/90 shadow-sm">
       {text}
@@ -24,19 +24,7 @@ function AudiencePill({ text }: { text: string }) {
   );
 }
 
-function TierCard({
-  title,
-  price,
-  note,
-  perks,
-  highlight,
-}: {
-  title: string;
-  price: string;
-  note?: string;
-  perks: string[];
-  highlight?: boolean;
-}) {
+function TierCard({ title, price, note, perks, highlight }) {
   return (
     <div
       className={[
@@ -49,7 +37,11 @@ function TierCard({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="text-2xl font-bold">{title}</h3>
-          {note ? <p className="mt-1 text-sm text-red-300">{note}</p> : <p className="mt-1 text-sm text-white/60">Sponsorship Tier</p>}
+          {note ? (
+            <p className="mt-1 text-sm text-red-300">{note}</p>
+          ) : (
+            <p className="mt-1 text-sm text-white/60">Sponsorship Tier</p>
+          )}
         </div>
         <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-2 text-lg font-semibold">
           {price}
@@ -188,7 +180,9 @@ export default function SponsorshipPage() {
           <div className="grid lg:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h3 className="text-xl font-semibold">Semper Fi Country</h3>
-              <p className="mt-2 text-white/75">Strong listener loyalty and extended sessions.</p>
+              <p className="mt-2 text-white/75">
+                Strong listener loyalty and extended sessions.
+              </p>
               <ul className="mt-4 space-y-2 text-white/85">
                 <li>• 1,800+ listening sessions</li>
                 <li>• 110+ unique listeners</li>
@@ -198,7 +192,9 @@ export default function SponsorshipPage() {
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h3 className="text-xl font-semibold">Ranger Rockwave</h3>
-              <p className="mt-2 text-white/75">Consistent reach into a rock-focused audience.</p>
+              <p className="mt-2 text-white/75">
+                Consistent reach into a rock-focused audience.
+              </p>
               <ul className="mt-4 space-y-2 text-white/85">
                 <li>• 1,600+ listening sessions</li>
                 <li>• 90+ unique listeners</li>
