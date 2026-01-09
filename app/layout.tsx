@@ -37,18 +37,20 @@ export default function RootLayout({
                     Home
                   </Link>
 
-                  <Link
-                    className="navLink"
-                    href="/stations/semper-fi-country"
-                  >
+                  <Link className="navLink" href="/stations/semper-fi-country">
                     Semper Fi Country
                   </Link>
 
-                  <Link
-                    className="navLink"
-                    href="/stations/ranger-rockwave"
-                  >
+                  <Link className="navLink" href="/stations/ranger-rockwave">
                     Ranger Rockwave
+                  </Link>
+
+                  <Link className="navLink" href="/artists">
+                    Artists
+                  </Link>
+
+                  <Link className="navLink" href="/sponsors">
+                    Sponsorship
                   </Link>
 
                   {/* DJs Dropdown */}
