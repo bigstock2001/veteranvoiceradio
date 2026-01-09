@@ -80,22 +80,26 @@ img{ max-width: 100%; display: block; }
 
 .pagePad{ padding: 40px 0 70px; }
 
-..topNav{
+.topNav{
   position: sticky;
   top: 0;
   z-index: 30;
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 
-  /* Patriotic glass gradient */
-  background:
-    linear-gradient(
-      90deg,
-      rgba(178,34,34,.35),   /* red */
-      rgba(255,255,255,.25),/* white */
-      rgba(30,58,138,.35)   /* blue */
-    );
+  /* ALWAYS-visible glass base (this is the key) */
+  background-color: rgba(8,12,22,.78);
 
-  border-bottom: 1px solid rgba(255,255,255,.25);
+  /* Patriotic gradient overlay */
+  background-image: linear-gradient(
+    90deg,
+    rgba(220,38,38,.38),     /* red */
+    rgba(255,255,255,.16),   /* white */
+    rgba(37,99,235,.38)      /* blue */
+  );
+
+  border-bottom: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
 }
 .navInner{
   display: flex;
