@@ -419,7 +419,16 @@ export default async function HomePage() {
       <section className="section">
         <div
   className="sectionTitle px-4 py-2"
-  style={GLASS_STYLE}
+  style={{
+  backgroundColor: "rgba(8,12,22,.78)",
+  backgroundImage:
+    "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+  backdropFilter: "blur(14px)",
+  WebkitBackdropFilter: "blur(14px)",
+  border: "1px solid rgba(255,255,255,.18)",
+  borderRadius: "14px",
+}}
+
 >
   Why We Exist
 </div>
