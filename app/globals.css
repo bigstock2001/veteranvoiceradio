@@ -21,8 +21,9 @@
 html, body{ padding: 0; margin: 0; }
 
 body{
-  /* NEW: layered light background for depth (no images) */
+  /* NEW: image + layered light background for depth */
   background:
+    url("/images/musicbackground.jpg") center / cover no-repeat fixed,
     radial-gradient(1100px 700px at 18% 12%, var(--glowCool), transparent 58%),
     radial-gradient(900px 620px at 78% 6%, var(--glowWarm), transparent 62%),
     radial-gradient(1200px 900px at 55% 55%, rgba(168,85,247,.10), transparent 62%),
