@@ -79,7 +79,7 @@ function TierCard({ title, price, note, perks, highlight }) {
 
 export default function SponsorshipPage() {
   return (
-    <main className="min-h-screen text-white">
+<main className="min-h-screen text-white [&_p]:text-white [&_li]:text-white">
       {/* HERO */}
       <section className="container pagePad text-center">
         <SectionHeader>Sponsorship Opportunities</SectionHeader>
