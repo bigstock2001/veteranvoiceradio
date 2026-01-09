@@ -197,7 +197,19 @@ export default async function HomePage() {
 
         <div className="homeHeroRight">
           <div className="glassCard">
-            <div className="cardTitle">Choose your station</div>
+           <div
+  className="cardTitle px-3 py-2"
+  style={{
+    backgroundColor: "rgba(8,12,22,.78)",
+    backgroundImage:
+      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+    backdropFilter: "blur(14px)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "12px",
+  }}
+>
+  Choose your station
+</div>
 
             <div className="stationGrid">
               {STATIONS.map((s) => (
