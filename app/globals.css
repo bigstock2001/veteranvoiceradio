@@ -22,7 +22,7 @@ html, body{ padding: 0; margin: 0; }
 
 body{
   /* NEW: image + layered light background for depth */
-   background:
+    background:
     /* DARK SCRIM FOR READABILITY */
     linear-gradient(
       180deg,
@@ -39,6 +39,9 @@ body{
     linear-gradient(180deg, rgba(255,255,255,.02), transparent 30%),
     var(--bg);
 
+  /* needed for the overlay */
+  position: relative;
+}
 
 /* NEW: subtle grain + vignette overlay (pure CSS, no images) */
 body::before{
