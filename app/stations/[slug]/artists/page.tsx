@@ -7,6 +7,7 @@ type StationSlug = "semper-fi-country" | "ranger-rockwave";
 type SanityArtist = {
   name?: string;
   slug?: { current?: string };
+  // stations can come back in different shapes depending on schema history / Studio config
   stations?: unknown;
   bio?: string;
   featured?: boolean;
@@ -38,11 +39,68 @@ type Artist = {
   };
 };
 
+function toStationSlug(v: unknown): StationSlug | null {
+  const s = String(v || "").trim();
+  if (s === "semper-fi-country" || s === "ranger-rockwave") return s;
+  return null;
+}
+
 function normalizeStations(raw: unknown): StationSlug[] {
-  const arr = Array.isArray(raw) ? raw : [];
-  return arr
-    .map((s) => String(s || "").trim())
-    .filter((s): s is StationSlug => s === "semper-fi-country" || s === "ranger-rockwave");
+  if (!raw) return [];
+
+  // Most common: ["semper-fi-country", "ranger-rockwave"]
+  if (Array.isArray(raw)) {
+    const out: StationSlug[] = [];
+
+    for (const item of raw) {
+      // string
+      const asString = toStationSlug(item);
+      if (asString) {
+        out.push(asString);
+        continue;
+      }
+
+      // object variants (defensive)
+      if (item && typeof item === "object") {
+        const anyItem = item as any;
+
+        // { value: "semper-fi-country" }
+        const v1 = toStationSlug(anyItem.value);
+        if (v1) {
+          out.push(v1);
+          continue;
+        }
+
+        // { slug: { current: "semper-fi-country" } }
+        const v2 = toStationSlug(anyItem.slug?.current);
+        if (v2) {
+          out.push(v2);
+          continue;
+        }
+
+        // { stationSlug: "semper-fi-country" }
+        const v3 = toStationSlug(anyItem.stationSlug);
+        if (v3) {
+          out.push(v3);
+          continue;
+        }
+
+        // { current: "semper-fi-country" }
+        const v4 = toStationSlug(anyItem.current);
+        if (v4) {
+          out.push(v4);
+          continue;
+        }
+      }
+    }
+
+    // de-dupe
+    return Array.from(new Set(out));
+  }
+
+  // If it somehow comes back as a single string
+  const single = toStationSlug(raw);
+  return single ? [single] : [];
 }
 
 function normalizeArtist(a: SanityArtist): Artist | null {
@@ -51,8 +109,8 @@ function normalizeArtist(a: SanityArtist): Artist | null {
   if (!slug || !name) return null;
 
   const stationSlugs = normalizeStations(a.stations);
-  if (!stationSlugs.length) return null;
-
+  // if stations can’t be read, don’t drop the artist entirely—keep it with empty stations
+  // (we’ll filter later)
   return {
     name,
     slug,
@@ -140,7 +198,6 @@ function StationBadge({ stationSlug }: { stationSlug: StationSlug }) {
 export default async function StationArtistsPage({
   params,
 }: {
-  // Next 15 typing in your project expects params to be a Promise
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
@@ -156,7 +213,7 @@ export default async function StationArtistsPage({
           </div>
           <div style={{ marginTop: 12 }}>
             <Link className="btn btnGhost" href="/artists">
-              View All Artists
+              Artist Hub
             </Link>
           </div>
         </section>
@@ -166,7 +223,8 @@ export default async function StationArtistsPage({
 
   const station = STATIONS.find((s) => s.slug === stationSlug);
 
-  const groq = `*[_type=="artist" && $stationSlug in stations]{
+  // IMPORTANT: Fetch ALL artists, then filter in JS.
+  const groq = `*[_type=="artist"]{
     name,
     slug,
     stations,
@@ -183,12 +241,16 @@ export default async function StationArtistsPage({
     "imageUrl": image.asset->url
   }`;
 
-  const res = await sanityFetch<SanityArtist[]>(groq, { stationSlug });
-  const listRaw: Artist[] =
-    res.ok && res.data ? (res.data.map(normalizeArtist).filter(Boolean) as Artist[]) : [];
+  const res = await sanityFetch<SanityArtist[]>(groq);
+  const all = res.ok && res.data ? (res.data.map(normalizeArtist).filter(Boolean) as Artist[]) : [];
 
-  const list = [...listRaw].sort((a, b) => lastNameKey(a.name).localeCompare(lastNameKey(b.name)));
+  // Filter by stationSlug AFTER normalizing
+  const filtered = all.filter((a) => a.stationSlugs.includes(stationSlug));
 
+  // Sort by last name
+  const list = [...filtered].sort((a, b) => lastNameKey(a.name).localeCompare(lastNameKey(b.name)));
+
+  // A–Z groups
   const groups = list.reduce<Record<string, Artist[]>>((acc, artist) => {
     const key = alphaBucket(artist.name);
     acc[key] = acc[key] || [];
@@ -206,8 +268,9 @@ export default async function StationArtistsPage({
         <div className="sectionTitle">
           {station?.callLetters || ""} {station?.name ? `• ${station.name}` : ""} • Artists
         </div>
+
         <div className="subtle" style={{ marginTop: 8 }}>
-          Artists featured on this station, sorted A–Z by last name.
+          Artists on this station — sorted A–Z by last name.
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
@@ -219,14 +282,21 @@ export default async function StationArtistsPage({
           </Link>
         </div>
 
+        {/* Debug note (helpful while you’re building up the roster) */}
+        <div className="note" style={{ marginTop: 12 }}>
+          {res.ok
+            ? `Sanity artists fetched: ${all.length}. Matching this station: ${list.length}.`
+            : "Sanity fetch failed. Check your Sanity env vars and dataset visibility."}
+        </div>
+
         {!list.length ? (
           <div className="note" style={{ marginTop: 12 }}>
-            {res.ok
-              ? "No artists assigned to this station yet. In Sanity, open an Artist and select this station under Stations."
-              : "Sanity isn’t returning data. Check your Sanity project/dataset env vars."}
+            No artists are tagged to this station yet. In Sanity → open an Artist → set Stations to{" "}
+            <strong>{stationSlug}</strong>.
           </div>
         ) : (
           <>
+            {/* A–Z Jump */}
             <div
               style={{
                 marginTop: 14,
@@ -246,6 +316,7 @@ export default async function StationArtistsPage({
               ))}
             </div>
 
+            {/* Groups */}
             <div style={{ marginTop: 14 }}>
               {available.map((letter) => (
                 <div key={letter} style={{ marginTop: 18 }}>
@@ -256,16 +327,10 @@ export default async function StationArtistsPage({
                   <div className="featureGrid" style={{ marginTop: 12 }}>
                     {(groups[letter] || []).map((a) => {
                       const primary = pickPrimaryLink(a.socials);
+
                       return (
                         <div key={a.slug} className="featureCard">
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              gap: 10,
-                            }}
-                          >
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                             <StationBadge stationSlug={stationSlug} />
                             {a.featured ? (
                               <div
