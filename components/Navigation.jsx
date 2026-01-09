@@ -25,17 +25,16 @@ export default function Navigation() {
     <header className="sticky top-0 z-50">
       <div className="mx-auto w-full max-w-6xl px-5 py-4">
         <div
-          className="container-card px-4 py-3 flex items-center justify-between"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(45,52,75,.55), rgba(45,52,75,.38))",
-            backdropFilter: "blur(12px)",
-          }}
+          className="
+            container-card px-4 py-3 flex items-center justify-between
+            text-white
+            !bg-white/15
+            !border-white/20
+            backdrop-blur-xl
+          "
         >
           <Link href="/" className="font-bold text-lg">
-            <span style={{ color: "#f59e0b" }}>
-              Veteran Voice Radio
-            </span>
+            <span style={{ color: "#f59e0b" }}>Veteran Voice Radio</span>
           </Link>
 
           <nav className="flex items-center gap-6">
@@ -51,7 +50,7 @@ export default function Navigation() {
               Sponsorship
             </Link>
 
-            {/* DJs dropdown */}
+            {/* DJs dropdown (hover on desktop, tap on mobile) */}
             <div
               className="relative"
               ref={djsRef}
@@ -69,7 +68,7 @@ export default function Navigation() {
               </button>
 
               {djsOpen && (
-                <div className="absolute right-0 mt-3 w-60 rounded-xl border bg-white shadow-lg overflow-hidden">
+                <div className="absolute right-0 mt-3 w-60 rounded-xl border bg-white shadow-lg overflow-hidden text-black">
                   {djStations.map((s) => (
                     <Link
                       key={s.href}
