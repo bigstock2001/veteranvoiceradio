@@ -85,7 +85,11 @@ img{ max-width: 100%; display: block; }
   top: 0;
   z-index: 30;
   backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(10,14,25,.45), rgba(10,14,25,.18));
+  background: linear-gradient(
+    180deg,
+    rgba(10,14,25,.22),
+    rgba(10,14,25,.08)
+  );
   border-bottom: 1px solid var(--border);
 }
 .navInner{
