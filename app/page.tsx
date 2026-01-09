@@ -2,6 +2,8 @@ import Link from "next/link";
 import { STATIONS } from "@/lib/stations";
 import { sanityFetch } from "@/lib/sanity";
 
+export const revalidate = 86400; // 24 hours
+
 type StationSlug = "semper-fi-country" | "ranger-rockwave";
 
 type SanityArtist = {
@@ -77,9 +79,41 @@ function stationLabel(stationSlugs: StationSlug[]) {
 
 function pickPrimaryLink(socials: Artist["socials"]) {
   if (socials.spotify) return { label: "Spotify", href: socials.spotify };
+  if (socials.appleMusic) return { label: "Apple Music", href: socials.appleMusic };
   if (socials.website) return { label: "Website", href: socials.website };
   if (socials.instagram) return { label: "Instagram", href: socials.instagram };
   return null;
+}
+
+/**
+ * Picks a rotating index that changes at midnight in America/Chicago.
+ * Uses only built-in Intl (no extra deps).
+ */
+function chicagoDayKey(d: Date) {
+  // en-CA gives YYYY-MM-DD format reliably
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
+function dayNumberFromYYYYMMDD(key: string) {
+  // key: "YYYY-MM-DD"
+  const [y, m, d] = key.split("-").map((n) => parseInt(n, 10));
+  // Simple stable day number; doesn’t need to match epoch exactly, just consistent:
+  // Convert to a count using a Date in UTC at noon to avoid DST edge weirdness.
+  const dt = new Date(Date.UTC(y, (m || 1) - 1, d || 1, 12, 0, 0));
+  return Math.floor(dt.getTime() / 86400000);
+}
+
+function pickDailyFeatured(list: Artist[]) {
+  if (!list.length) return null;
+  const key = chicagoDayKey(new Date());
+  const dayNum = dayNumberFromYYYYMMDD(key);
+  const idx = Math.abs(dayNum) % list.length;
+  return list[idx] || list[0];
 }
 
 export default async function HomePage() {
@@ -89,7 +123,8 @@ export default async function HomePage() {
   const MISSION =
     "We honor service through sound — helping veterans heal, reconnect, and rediscover purpose by amplifying the music and stories behind the uniform.";
 
-  const groqFeaturedArtists = `*[_type=="artist" && featured==true] | order(name asc)[0...6]{
+  // Fetch featured artists (cap high enough so you can add plenty)
+  const groqFeaturedArtists = `*[_type=="artist" && featured==true] | order(name asc)[0...200]{
     name,
     slug,
     stations,
@@ -107,10 +142,12 @@ export default async function HomePage() {
   }`;
 
   const resArtists = await sanityFetch<SanityArtist[]>(groqFeaturedArtists);
-  const featuredArtists: Artist[] =
+  const featuredList: Artist[] =
     resArtists.ok && resArtists.data
       ? (resArtists.data.map(normalizeArtist).filter(Boolean) as Artist[])
       : [];
+
+  const featured = pickDailyFeatured(featuredList);
 
   return (
     <div className="container pagePad">
@@ -140,9 +177,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="note">
-            Your player stays with you. Pick a station and browse without losing audio.
-          </div>
+          <div className="note">Your player stays with you. Pick a station and browse without losing audio.</div>
 
           <div className="trustRow">
             <div className="trustPill">Veteran-led</div>
@@ -186,7 +221,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* FEATURED ARTISTS */}
+      {/* FEATURED ARTIST (ONE, ROTATES DAILY) */}
       <section className="section">
         <div
           style={{
@@ -197,11 +232,11 @@ export default async function HomePage() {
             flexWrap: "wrap",
           }}
         >
-          <div className="sectionTitle">Featured Artists</div>
+          <div className="sectionTitle">Featured Artist</div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link className="btn btnGhost" href="/artists">
-              View All Artists
+              View Artists
             </Link>
             <Link className="btn btnGhost" href={`/stations/${STATIONS[0].slug}`}>
               Listen Live
@@ -210,88 +245,91 @@ export default async function HomePage() {
         </div>
 
         <div className="subtle" style={{ marginTop: 8 }}>
-          Spotlighting veteran artists featured on Veteran Voice Radio.
+          Rotates daily at midnight (America/Chicago). Spotlighting veteran artists featured on Veteran Voice Radio.
         </div>
 
-        {!featuredArtists.length ? (
+        {!featured ? (
           <div className="note" style={{ marginTop: 12 }}>
             {resArtists.ok
-              ? "No featured artists yet — add artists in Sanity and mark them as Featured."
-              : "Featured artists will appear here once Sanity is connected (or env vars are set)."}
+              ? "No featured artists yet — in Sanity, mark one or more artists as Featured."
+              : "Featured artist will appear here once Sanity is connected (or env vars are set)."}
           </div>
         ) : (
           <div className="featureGrid" style={{ marginTop: 14 }}>
-            {featuredArtists.map((a) => {
-              const primary = pickPrimaryLink(a.socials);
-              return (
-                <div key={a.slug} className="featureCard">
-                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                    {a.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={a.imageUrl}
-                        alt={a.name}
-                        width={56}
-                        height={56}
-                        style={{
-                          width: 56,
-                          height: 56,
-                          borderRadius: 999,
-                          objectFit: "cover",
-                          border: "1px solid rgba(255,255,255,0.15)",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: 56,
-                          height: 56,
-                          borderRadius: 999,
-                          background: "rgba(255,255,255,0.08)",
-                          border: "1px solid rgba(255,255,255,0.15)",
-                          display: "grid",
-                          placeItems: "center",
-                          fontWeight: 900,
-                        }}
-                      >
-                        {a.name?.[0]?.toUpperCase?.() || "A"}
-                      </div>
-                    )}
-
-                    <div>
-                      <div style={{ fontWeight: 900, fontSize: 15 }}>{a.name}</div>
-                      <div className="subtle" style={{ marginTop: 2 }}>
-                        {stationLabel(a.stationSlugs)}
-                      </div>
-                    </div>
+            <div className="featureCard">
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                {featured.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={featured.imageUrl}
+                    alt={featured.name}
+                    width={56}
+                    height={56}
+                    style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 999,
+                      objectFit: "cover",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 999,
+                      background: "rgba(255,255,255,0.08)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      display: "grid",
+                      placeItems: "center",
+                      fontWeight: 900,
+                    }}
+                  >
+                    {featured.name?.[0]?.toUpperCase?.() || "A"}
                   </div>
+                )}
 
-                  {a.bio ? (
-                    <div className="subtle" style={{ marginTop: 10 }}>
-                      {a.bio}
-                    </div>
-                  ) : null}
-
-                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
-                    <Link className="btn btnGhost" href="/artists">
-                      Artist Directory
-                    </Link>
-
-                    {primary ? (
-                      <a className="btn btnGhost" href={primary.href} target="_blank" rel="noreferrer">
-                        {primary.label}
-                      </a>
-                    ) : null}
-
-                    {a.stationSlugs.length === 1 ? (
-                      <Link className="btn btnGhost" href={`/stations/${a.stationSlugs[0]}`}>
-                        Listen
-                      </Link>
-                    ) : null}
+                <div>
+                  <div style={{ fontWeight: 900, fontSize: 15 }}>{featured.name}</div>
+                  <div className="subtle" style={{ marginTop: 2 }}>
+                    {stationLabel(featured.stationSlugs)}
                   </div>
                 </div>
-              );
-            })}
+              </div>
+
+              {featured.bio ? <div className="subtle" style={{ marginTop: 10 }}>{featured.bio}</div> : null}
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
+                <Link className="btn btnGhost" href="/artists">
+                  Artist Directory
+                </Link>
+
+                {(() => {
+                  const primary = pickPrimaryLink(featured.socials);
+                  return primary ? (
+                    <a className="btn btnGhost" href={primary.href} target="_blank" rel="noreferrer">
+                      {primary.label}
+                    </a>
+                  ) : null;
+                })()}
+
+                {featured.stationSlugs.length === 1 ? (
+                  <Link className="btn btnGhost" href={`/stations/${featured.stationSlugs[0]}`}>
+                    Listen
+                  </Link>
+                ) : (
+                  <>
+                    <Link className="btn btnGhost" href="/stations/semper-fi-country/artists">
+                      Semper Artists
+                    </Link>
+                    <Link className="btn btnGhost" href="/stations/ranger-rockwave/artists">
+                      Rockwave Artists
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </section>
