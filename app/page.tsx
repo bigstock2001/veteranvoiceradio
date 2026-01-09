@@ -423,6 +423,7 @@ export default async function HomePage() {
 >
   Why We Exist
 </div>
+
         <div className="featureGrid">
           <div className="featureCard">
             <div className="featureTitle">Music as therapy</div>
