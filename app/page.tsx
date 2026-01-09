@@ -202,9 +202,45 @@ export default async function HomePage() {
   Veteran-Led
 </div>
 
-            <div className="trustPill">Listener supported</div>
-            <div className="trustPill">Artist spotlight</div>
-            <div className="trustPill">Community impact</div>
+            <div
+  className="sectionTitle px-4 py-2"
+  style={{
+    backgroundColor: "rgba(8,12,22,.78)",
+    backgroundImage:
+      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+    backdropFilter: "blur(14px)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "14px",
+  }}
+>
+  Listener Supported
+</div>
+           <div
+  className="sectionTitle px-4 py-2"
+  style={{
+    backgroundColor: "rgba(8,12,22,.78)",
+    backgroundImage:
+      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+    backdropFilter: "blur(14px)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "14px",
+  }}
+>
+  Artist Featured
+</div>
+            <div
+  className="sectionTitle px-4 py-2"
+  style={{
+    backgroundColor: "rgba(8,12,22,.78)",
+    backgroundImage:
+      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+    backdropFilter: "blur(14px)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "14px",
+  }}
+>
+  Community Focused
+</div>
           </div>
         </div>
 
