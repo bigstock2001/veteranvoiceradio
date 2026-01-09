@@ -252,7 +252,19 @@ export default async function HomePage() {
             flexWrap: "wrap",
           }}
         >
-          <div className="sectionTitle">Featured Artist</div>
+          <div
+  className="sectionTitle px-4 py-2"
+  style={{
+    backgroundColor: "rgba(8,12,22,.78)",
+    backgroundImage:
+      "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+    backdropFilter: "blur(14px)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "14px",
+  }}
+>
+  Featured Artist
+</div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Link className="btn btnGhost" href="/artists">
