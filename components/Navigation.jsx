@@ -34,6 +34,14 @@ export default function Navigation() {
               Stations
             </Link>
 
+            <Link href="/artists" className="hover:opacity-80">
+              Artists
+            </Link>
+
+            <Link href="/sponsors" className="hover:opacity-80">
+              Sponsorship
+            </Link>
+
             {/* DJs dropdown (hover on desktop, tap on mobile) */}
             <div
               className="relative"
