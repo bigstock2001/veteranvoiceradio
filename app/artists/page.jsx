@@ -16,7 +16,7 @@ const PATRIOT_GLASS = {
   border: "1px solid rgba(255,255,255,.18)",
   borderRadius: "14px",
   boxShadow: "0 10px 30px rgba(0,0,0,.35)",
-} as const;
+};
 
 export default function ArtistsHubPage() {
   const semper = STATIONS.find((s) => s.slug === "semper-fi-country");
@@ -26,7 +26,7 @@ export default function ArtistsHubPage() {
     <div className="container pagePad" style={{ color: "rgba(255,255,255,.92)" }}>
       <section className="section">
         {/* Patriot Divider Header */}
-        <div className="sectionTitle px-4 py-2" style={PATRIOT_GLASS}>
+        <div className="sectionTitle px-4 py-2" style={{ ...PATRIOT_GLASS, color: "rgba(255,255,255,.95)" }}>
           Artists
         </div>
 
