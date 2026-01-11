@@ -39,6 +39,18 @@ type Artist = {
   };
 };
 
+// Patriot “glass” divider (matches your Home page styling)
+const PATRIOT_GLASS = {
+  backgroundColor: "rgba(8,12,22,.78)",
+  backgroundImage:
+    "linear-gradient(90deg, rgba(220,38,38,.38), rgba(255,255,255,.16), rgba(37,99,235,.38))",
+  backdropFilter: "blur(14px)",
+  WebkitBackdropFilter: "blur(14px)",
+  border: "1px solid rgba(255,255,255,.18)",
+  borderRadius: "14px",
+  boxShadow: "0 10px 30px rgba(0,0,0,.35)",
+} as const;
+
 function toStationSlug(v: unknown): StationSlug | null {
   const s = String(v || "").trim();
   if (s === "semper-fi-country" || s === "ranger-rockwave") return s;
@@ -48,44 +60,37 @@ function toStationSlug(v: unknown): StationSlug | null {
 function normalizeStations(raw: unknown): StationSlug[] {
   if (!raw) return [];
 
-  // Most common: ["semper-fi-country", "ranger-rockwave"]
   if (Array.isArray(raw)) {
     const out: StationSlug[] = [];
 
     for (const item of raw) {
-      // string
       const asString = toStationSlug(item);
       if (asString) {
         out.push(asString);
         continue;
       }
 
-      // object variants (defensive)
       if (item && typeof item === "object") {
         const anyItem = item as any;
 
-        // { value: "semper-fi-country" }
         const v1 = toStationSlug(anyItem.value);
         if (v1) {
           out.push(v1);
           continue;
         }
 
-        // { slug: { current: "semper-fi-country" } }
         const v2 = toStationSlug(anyItem.slug?.current);
         if (v2) {
           out.push(v2);
           continue;
         }
 
-        // { stationSlug: "semper-fi-country" }
         const v3 = toStationSlug(anyItem.stationSlug);
         if (v3) {
           out.push(v3);
           continue;
         }
 
-        // { current: "semper-fi-country" }
         const v4 = toStationSlug(anyItem.current);
         if (v4) {
           out.push(v4);
@@ -94,11 +99,9 @@ function normalizeStations(raw: unknown): StationSlug[] {
       }
     }
 
-    // de-dupe
     return Array.from(new Set(out));
   }
 
-  // If it somehow comes back as a single string
   const single = toStationSlug(raw);
   return single ? [single] : [];
 }
@@ -109,8 +112,7 @@ function normalizeArtist(a: SanityArtist): Artist | null {
   if (!slug || !name) return null;
 
   const stationSlugs = normalizeStations(a.stations);
-  // if stations can’t be read, don’t drop the artist entirely—keep it with empty stations
-  // (we’ll filter later)
+
   return {
     name,
     slug,
@@ -178,6 +180,7 @@ function StationBadge({ stationSlug }: { stationSlug: StationSlug }) {
         fontSize: 12,
         fontWeight: 800,
         letterSpacing: 0.4,
+        color: "rgba(255,255,255,.92)",
       }}
     >
       <span
@@ -205,12 +208,23 @@ export default async function StationArtistsPage({
 
   if (stationSlug !== "semper-fi-country" && stationSlug !== "ranger-rockwave") {
     return (
-      <div className="container pagePad">
+      <div className="container pagePad" style={{ color: "rgba(255,255,255,.92)" }}>
         <section className="section">
-          <div className="sectionTitle">Artists</div>
+          <div
+            style={{
+              ...PATRIOT_GLASS,
+              color: "rgba(255,255,255,.94)",
+              padding: "10px 16px",
+              fontWeight: 900,
+            }}
+          >
+            Artists
+          </div>
+
           <div className="note" style={{ marginTop: 12 }}>
             Station not found.
           </div>
+
           <div style={{ marginTop: 12 }}>
             <Link className="btn btnGhost" href="/artists">
               Artist Hub
@@ -223,7 +237,7 @@ export default async function StationArtistsPage({
 
   const station = STATIONS.find((s) => s.slug === stationSlug);
 
-  // IMPORTANT: Fetch ALL artists, then filter in JS.
+  // Fetch ALL artists, then filter in JS.
   const groq = `*[_type=="artist"]{
     name,
     slug,
@@ -244,13 +258,9 @@ export default async function StationArtistsPage({
   const res = await sanityFetch<SanityArtist[]>(groq);
   const all = res.ok && res.data ? (res.data.map(normalizeArtist).filter(Boolean) as Artist[]) : [];
 
-  // Filter by stationSlug AFTER normalizing
   const filtered = all.filter((a) => a.stationSlugs.includes(stationSlug));
-
-  // Sort by last name
   const list = [...filtered].sort((a, b) => lastNameKey(a.name).localeCompare(lastNameKey(b.name)));
 
-  // A–Z groups
   const groups = list.reduce<Record<string, Artist[]>>((acc, artist) => {
     const key = alphaBucket(artist.name);
     acc[key] = acc[key] || [];
@@ -262,14 +272,24 @@ export default async function StationArtistsPage({
   const available = letters.filter((l) => groups[l]?.length);
   if (groups["#"]?.length) available.push("#");
 
+  const pageTitle = `${station?.callLetters || ""}${station?.name ? ` • ${station.name}` : ""} • Artists`;
+
   return (
-    <div className="container pagePad">
+    <div className="container pagePad" style={{ color: "rgba(255,255,255,.92)" }}>
       <section className="section">
-        <div className="sectionTitle">
-          {station?.callLetters || ""} {station?.name ? `• ${station.name}` : ""} • Artists
+        {/* Patriot Divider Header */}
+        <div
+          style={{
+            ...PATRIOT_GLASS,
+            color: "rgba(255,255,255,.94)",
+            padding: "10px 16px",
+            fontWeight: 900,
+          }}
+        >
+          {pageTitle}
         </div>
 
-        <div className="subtle" style={{ marginTop: 8 }}>
+        <div className="subtle" style={{ marginTop: 10 }}>
           Artists on this station — sorted A–Z by last name.
         </div>
 
@@ -282,7 +302,6 @@ export default async function StationArtistsPage({
           </Link>
         </div>
 
-        {/* Debug note (helpful while you’re building up the roster) */}
         <div className="note" style={{ marginTop: 12 }}>
           {res.ok
             ? `Sanity artists fetched: ${all.length}. Matching this station: ${list.length}.`
@@ -310,7 +329,12 @@ export default async function StationArtistsPage({
               }}
             >
               {available.map((l) => (
-                <a key={l} href={`#letter-${l}`} className="btn btnGhost" style={{ padding: "8px 10px" }}>
+                <a
+                  key={l}
+                  href={`#letter-${l}`}
+                  className="btn btnGhost"
+                  style={{ padding: "8px 10px", color: "rgba(255,255,255,.92)" }}
+                >
                   {l}
                 </a>
               ))}
@@ -319,12 +343,31 @@ export default async function StationArtistsPage({
             {/* Groups */}
             <div style={{ marginTop: 14 }}>
               {available.map((letter) => (
-                <div key={letter} style={{ marginTop: 18 }}>
-                  <div id={`letter-${letter}`} className="sectionTitle" style={{ fontSize: 16, opacity: 0.95 }}>
+                <div key={letter} style={{ marginTop: 22 }}>
+                  {/* Patriot Divider for A/B/C group header (centered) */}
+                  <div
+                    id={`letter-${letter}`}
+                    style={{
+                      ...PATRIOT_GLASS,
+                      color: "rgba(255,255,255,.96)",
+                      borderRadius: 999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      padding: "10px 18px",
+                      fontSize: 18,
+                      fontWeight: 900,
+                      letterSpacing: "0.08em",
+                      width: "100%",
+                      maxWidth: 520,
+                      margin: "0 auto",
+                    }}
+                  >
                     {letter === "#" ? "Other" : letter}
                   </div>
 
-                  <div className="featureGrid" style={{ marginTop: 12 }}>
+                  <div className="featureGrid" style={{ marginTop: 14 }}>
                     {(groups[letter] || []).map((a) => {
                       const primary = pickPrimaryLink(a.socials);
 
@@ -332,6 +375,7 @@ export default async function StationArtistsPage({
                         <div key={a.slug} className="featureCard">
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                             <StationBadge stationSlug={stationSlug} />
+
                             {a.featured ? (
                               <div
                                 style={{
@@ -342,6 +386,7 @@ export default async function StationArtistsPage({
                                   background: "rgba(220,38,38,0.18)",
                                   fontSize: 12,
                                   fontWeight: 900,
+                                  color: "rgba(255,255,255,.92)",
                                 }}
                               >
                                 Featured
@@ -376,6 +421,7 @@ export default async function StationArtistsPage({
                                   display: "grid",
                                   placeItems: "center",
                                   fontWeight: 900,
+                                  color: "rgba(255,255,255,.92)",
                                 }}
                               >
                                 {a.name?.[0]?.toUpperCase?.() || "A"}
@@ -383,7 +429,9 @@ export default async function StationArtistsPage({
                             )}
 
                             <div>
-                              <div style={{ fontWeight: 900, fontSize: 16 }}>{a.name}</div>
+                              <div style={{ fontWeight: 900, fontSize: 16, color: "rgba(255,255,255,.96)" }}>
+                                {a.name}
+                              </div>
                               <div className="subtle" style={{ marginTop: 2 }}>
                                 {station?.name || "Station Artist"}
                               </div>

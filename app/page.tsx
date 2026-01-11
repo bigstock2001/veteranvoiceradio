@@ -167,7 +167,9 @@ export default async function HomePage() {
   const featured = pickDailyFeatured(featuredList);
 
   return (
-    <div className="container pagePad">
+    // NOTE: Force a readable default text color at the page root so we don’t get
+    // “mystery black paragraphs” from browser/default CSS on some elements.
+    <div className="container pagePad" style={{ color: "rgba(255,255,255,.92)" }}>
       {/* HERO */}
       <section className="homeHero">
         <div className="homeHeroLeft">
@@ -317,6 +319,7 @@ export default async function HomePage() {
                       display: "grid",
                       placeItems: "center",
                       fontWeight: 900,
+                      color: "rgba(255,255,255,.94)",
                     }}
                   >
                     {featured.name?.[0]?.toUpperCase?.() || "A"}
