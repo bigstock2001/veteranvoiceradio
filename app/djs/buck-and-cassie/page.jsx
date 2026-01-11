@@ -8,7 +8,7 @@ export default function BuckAndCassiePage() {
     border: "1px solid rgba(255,255,255,.18)",
     borderRadius: "14px",
     boxShadow: "0 10px 30px rgba(0,0,0,.35)",
-  } as const;
+  };
 
   const GLASS_PANEL = {
     background: "rgba(8,12,22,.62)",
@@ -17,7 +17,7 @@ export default function BuckAndCassiePage() {
     boxShadow: "0 10px 30px rgba(0,0,0,.35)",
     backdropFilter: "blur(10px)",
     WebkitBackdropFilter: "blur(10px)",
-  } as const;
+  };
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-10" style={{ color: "rgba(255,255,255,.92)" }}>
@@ -35,7 +35,12 @@ export default function BuckAndCassiePage() {
         {/* Patriot Divider Title */}
         <div
           className="px-4 py-2 inline-flex"
-          style={{ ...PATRIOT_GLASS, color: "rgba(255,255,255,.96)", fontWeight: 900, fontSize: 24 }}
+          style={{
+            ...PATRIOT_GLASS,
+            color: "rgba(255,255,255,.96)",
+            fontWeight: 900,
+            fontSize: 24,
+          }}
         >
           Reveille &amp; Coffee
         </div>
@@ -57,7 +62,7 @@ export default function BuckAndCassiePage() {
 
         {/* Description */}
         <div className="mt-4 max-w-3xl p-4" style={GLASS_PANEL}>
-          <p style={{ lineHeight: 1.7, color: "rgba(255,255,255,.88)" }}>
+          <p style={{ lineHeight: 1.7, color: "rgba(255,255,255,.88)", margin: 0 }}>
             Start your morning with Buck &amp; Cassie as they bring real conversation, veteran perspective, and grounded
             energy to ease into the day. Reveille &amp; Coffee blends military culture with everyday life — familiar
             voices, zero fluff, and plenty of coffee.
@@ -70,7 +75,12 @@ export default function BuckAndCassiePage() {
         {/* Patriot Divider for Section Header */}
         <div
           className="px-4 py-2 inline-flex"
-          style={{ ...PATRIOT_GLASS, color: "rgba(255,255,255,.96)", fontWeight: 900, fontSize: 18 }}
+          style={{
+            ...PATRIOT_GLASS,
+            color: "rgba(255,255,255,.96)",
+            fontWeight: 900,
+            fontSize: 18,
+          }}
         >
           Your Hosts
         </div>

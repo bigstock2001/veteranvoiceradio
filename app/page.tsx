@@ -119,7 +119,6 @@ function chicagoDayKey(d: Date) {
 function dayNumberFromYYYYMMDD(key: string) {
   // key: "YYYY-MM-DD"
   const [y, m, d] = key.split("-").map((n) => parseInt(n, 10));
-  // Simple stable day number; doesn’t need to match epoch exactly, just consistent:
   // Convert to a count using a Date in UTC at noon to avoid DST edge weirdness.
   const dt = new Date(Date.UTC(y, (m || 1) - 1, d || 1, 12, 0, 0));
   return Math.floor(dt.getTime() / 86400000);
@@ -196,22 +195,24 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="note">Your player stays with you. Pick a station and browse without losing audio.</div>
+          <div className="note" style={{ marginTop: 12 }}>
+            Your player stays with you. Pick a station and browse without losing audio.
+          </div>
 
-          <div className="trustRow">
-            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          <div className="trustRow" style={{ marginTop: 16, gap: 12 }}>
+            <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
               Veteran-Led
             </div>
 
-            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+            <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
               Listener Supported
             </div>
 
-            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+            <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
               Artist Featured
             </div>
 
-            <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+            <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
               Community Focused
             </div>
           </div>
@@ -219,7 +220,7 @@ export default async function HomePage() {
 
         <div className="homeHeroRight">
           <div className="glassCard">
-            <div className="cardTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+            <div className="cardTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Choose your station
             </div>
 
@@ -248,13 +249,15 @@ export default async function HomePage() {
               ))}
             </div>
 
-            <div className="miniNote">Tip: on mobile, start audio first — then browse shows & mission.</div>
+            <div className="miniNote" style={{ marginTop: 12 }}>
+              Tip: on mobile, start audio first — then browse shows & mission.
+            </div>
           </div>
         </div>
       </section>
 
       {/* FEATURED ARTIST (ONE, ROTATES DAILY) */}
-      <section className="section">
+      <section className="section" style={{ marginTop: 44, marginBottom: 44 }}>
         <div
           style={{
             display: "flex",
@@ -264,7 +267,7 @@ export default async function HomePage() {
             flexWrap: "wrap",
           }}
         >
-          <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+          <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
             Featured Artist
           </div>
 
@@ -279,18 +282,18 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="subtle" style={{ marginTop: 8 }}>
+        <div className="subtle" style={{ marginTop: 10, lineHeight: 1.6 }}>
           Rotates daily at midnight (America/Chicago). Spotlighting veteran artists featured on Veteran Voice Radio.
         </div>
 
         {!featured ? (
-          <div className="note" style={{ marginTop: 12 }}>
+          <div className="note" style={{ marginTop: 14 }}>
             {resArtists.ok
               ? "No featured artists yet — in Sanity, mark one or more artists as Featured."
               : "Featured artist will appear here once Sanity is connected (or env vars are set)."}
           </div>
         ) : (
-          <div className="featureGrid" style={{ marginTop: 14 }}>
+          <div className="featureGrid" style={{ marginTop: 18 }}>
             <div className="featureCard">
               <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                 {featured.imageUrl ? (
@@ -327,16 +330,16 @@ export default async function HomePage() {
                 )}
 
                 <div>
-                  <div style={{ fontWeight: 900, fontSize: 15 }}>{featured.name}</div>
-                  <div className="subtle" style={{ marginTop: 2 }}>
+                  <div style={{ fontWeight: 900, fontSize: 15, color: "rgba(255,255,255,.95)" }}>{featured.name}</div>
+                  <div className="subtle" style={{ marginTop: 4 }}>
                     {stationLabel(featured.stationSlugs)}
                   </div>
                 </div>
               </div>
 
-              {featured.bio ? <div className="subtle" style={{ marginTop: 10 }}>{featured.bio}</div> : null}
+              {featured.bio ? <div className="subtle" style={{ marginTop: 12, lineHeight: 1.6 }}>{featured.bio}</div> : null}
 
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
                 <Link className="btn btnGhost" href="/artists">
                   Artist Directory
                 </Link>
@@ -371,37 +374,37 @@ export default async function HomePage() {
       </section>
 
       {/* NONPROFIT: WHY WE EXIST */}
-      <section className="section">
-        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+      <section className="section" style={{ marginBottom: 48 }}>
+        <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
           Why We Exist
         </div>
 
-        <div className="featureGrid">
+        <div className="featureGrid" style={{ marginTop: 16 }}>
           <div className="featureCard">
-            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+            <div className="featureTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Music as a lifeline
             </div>
-            <div className="subtle">
-              For many veterans, music is more than entertainment — it’s a way to process trauma, reconnect with
-              identity, and rediscover hope.
+            <div className="subtle" style={{ marginTop: 10, lineHeight: 1.65 }}>
+              For many veterans, music is more than entertainment — it’s a way to process trauma, reconnect with identity,
+              and rediscover hope.
             </div>
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+            <div className="featureTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               A platform for veteran artists
             </div>
-            <div className="subtle">
-              We spotlight music created by veterans and military family members, giving them a real platform — and a
-              path toward careers in music and media.
+            <div className="subtle" style={{ marginTop: 10, lineHeight: 1.65 }}>
+              We spotlight music created by veterans and military family members, giving them a real platform — and a path
+              toward careers in music and media.
             </div>
           </div>
 
           <div className="featureCard">
-            <div className="featureTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+            <div className="featureTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Stories behind the songs
             </div>
-            <div className="subtle">
+            <div className="subtle" style={{ marginTop: 10, lineHeight: 1.65 }}>
               We don’t just play tracks. We amplify the strength behind them — the courage, resilience, and creativity
               born from service.
             </div>
@@ -410,47 +413,51 @@ export default async function HomePage() {
       </section>
 
       {/* WHERE SUPPORT GOES */}
-      <section className="section">
-        <div className="sectionTitle px-4 py-2" style={GLASS_STYLE}>
+      <section className="section" style={{ marginBottom: 56 }}>
+        <div className="sectionTitle px-4 py-2" style={{ ...GLASS_STYLE, color: "rgba(255,255,255,.95)" }}>
           Where Your Support Goes
         </div>
 
-        <div className="supportGrid">
-          <div className="supportCard">
-            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+        <div className="supportGrid" style={{ marginTop: 16 }}>
+          <div className="supportCard" style={{ marginBottom: 28 }}>
+            <div className="supportTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Broadcast + Hosting
             </div>
-            <div className="subtle">Streaming, licensing, distribution, and the tools that keep both stations on air.</div>
+            <div className="subtle" style={{ marginTop: 8, lineHeight: 1.65 }}>
+              Streaming, licensing, distribution, and the tools that keep both stations on air.
+            </div>
           </div>
 
-          <div className="supportCard">
-            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+          <div className="supportCard" style={{ marginBottom: 28 }}>
+            <div className="supportTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Veteran Artist Spotlight
             </div>
-            <div className="subtle">
+            <div className="subtle" style={{ marginTop: 8, lineHeight: 1.65 }}>
               Promotion for veteran creators, interviews, and programming that puts their work in front of the world.
             </div>
           </div>
 
-          <div className="supportCard">
-            <div className="supportTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+          <div className="supportCard" style={{ marginBottom: 8 }}>
+            <div className="supportTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Community + Events
             </div>
-            <div className="subtle">
+            <div className="subtle" style={{ marginTop: 8, lineHeight: 1.65 }}>
               Projects that elevate veteran voices and strengthen connection through music, storytelling, and service.
             </div>
           </div>
         </div>
 
-        <div className="ctaBar">
+        <div className="ctaBar" style={{ marginTop: 34 }}>
           <div>
-            <div className="ctaBarTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+            <div className="ctaBarTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Support the mission
             </div>
-            <div className="subtle">Tune in, turn up, and support those who’ve served — one song at a time.</div>
+            <div className="subtle" style={{ marginTop: 10, lineHeight: 1.65 }}>
+              Tune in, turn up, and support those who’ve served — one song at a time.
+            </div>
           </div>
 
-          <div className="ctaBarActions">
+          <div className="ctaBarActions" style={{ marginTop: 10 }}>
             <a className="btn btnPrimary" href={DONATE_HREF} target="_blank" rel="noreferrer">
               Donate Now
             </a>
@@ -462,20 +469,22 @@ export default async function HomePage() {
       </section>
 
       {/* TRANSPARENCY */}
-      <section className="section">
+      <section className="section" style={{ marginTop: 48 }}>
         <div className="glassBand">
           <div className="bandLeft">
-            <div className="bandTitle px-3 py-2" style={GLASS_STYLE_SMALL}>
+            <div className="bandTitle px-3 py-2" style={{ ...GLASS_STYLE_SMALL, color: "rgba(255,255,255,.95)" }}>
               Veteran Voice Radio is a nonprofit.
             </div>
-            <div className="subtle">
-              We’re veteran-run and listener supported. Donations help keep the network on air and expand opportunities
-              for veteran artists.
+            <div className="subtle" style={{ marginTop: 10, lineHeight: 1.65 }}>
+              We’re veteran-run and listener supported. Donations help keep the network on air and expand opportunities for
+              veteran artists.
             </div>
-            <div className="bandMeta">{EIN}</div>
+            <div className="bandMeta" style={{ marginTop: 10 }}>
+              {EIN}
+            </div>
           </div>
 
-          <div className="bandRight">
+          <div className="bandRight" style={{ gap: 10 }}>
             <Link className="btn btnGhost" href="/about">
               Read our story
             </Link>
