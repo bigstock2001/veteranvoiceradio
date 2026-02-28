@@ -50,6 +50,10 @@ export default function Navigation() {
               Sponsorship
             </Link>
 
+            <Link href="/webinars/live" className="hover:opacity-80">
+              Live Webinar
+            </Link>
+
             {/* DJs dropdown (hover on desktop, tap on mobile) */}
             <div
               className="relative"
