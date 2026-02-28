@@ -53,6 +53,11 @@ export default function RootLayout({
                     Sponsorship
                   </Link>
 
+                  {/* NEW: Live Webinar */}
+                  <Link className="navLink" href="/webinars/live">
+                    Live Webinar
+                  </Link>
+
                   {/* DJs Dropdown */}
                   <div className="vvrDropdown" aria-label="DJs menu">
                     <button
