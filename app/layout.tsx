@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script"; // ✅ Added
 import "./globals.css";
 import RadioPlayerProvider from "@/components/RadioPlayerProvider";
 import StickyPlayerBar from "@/components/StickyPlayerBar";
@@ -19,6 +20,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* ✅ Google Analytics Tag */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-RLQ6D8W4M5"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RLQ6D8W4M5');
+          `}
+        </Script>
+      </head>
+
       <body>
         <RadioPlayerProvider>
           <div className="site">
@@ -53,12 +70,10 @@ export default function RootLayout({
                     Sponsorship
                   </Link>
 
-                  {/* NEW: Live Webinar */}
                   <Link className="navLink" href="/webinars/live">
                     Live Webinar
                   </Link>
 
-                  {/* DJs Dropdown */}
                   <div className="vvrDropdown" aria-label="DJs menu">
                     <button
                       type="button"
@@ -97,7 +112,6 @@ export default function RootLayout({
                 </nav>
               </div>
 
-              {/* Scoped dropdown CSS */}
               <style>{`
                 .vvrDropdown {
                   position: relative;
