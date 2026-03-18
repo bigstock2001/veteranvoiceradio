@@ -35,7 +35,7 @@ export default function LiveWebinarPage() {
             }}
           >
             <iframe
-              src="https://streamyard.com/watch/5cg7CNiGy7UY?embed=true"
+              src="https://streamyard.com/watch/g2PzfJgGG6vi?embed=true"
               width="100%"
               height="100%"
               frameBorder="0"
