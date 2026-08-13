@@ -70,6 +70,10 @@ export default function RootLayout({
                     Sponsorship
                   </Link>
 
+                  <Link className="navLink" href="/freedom-fest">
+                    Freedom Fest
+                  </Link>
+
                   <Link className="navLink" href="/webinars/live">
                     Live Webinar
                   </Link>
