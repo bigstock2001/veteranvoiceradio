@@ -74,6 +74,10 @@ export default function RootLayout({
                     Freedom Fest
                   </Link>
 
+                  <Link className="navLink" href="/shop">
+                    Shop
+                  </Link>
+
                   <Link className="navLink" href="/webinars/live">
                     Live Webinar
                   </Link>
