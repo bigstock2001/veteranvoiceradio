@@ -35,10 +35,16 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           alt={`${code} — ${name}`}
           draggable="false"
           style={{
+            position: "absolute",
+            display: "block",
+            maxWidth: "none",
             width: `${columns * 100}%`,
             height: `${rows * 100}%`,
             left: `-${col * 100}%`,
             top: `-${row * 100}%`,
+            objectFit: "fill",
+            transition: "left .55s ease, top .55s ease",
+            userSelect: "none",
           }}
         />
 
