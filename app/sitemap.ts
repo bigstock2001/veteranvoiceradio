@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/webinars",
     "/sponsors",
     "/artists",
+    "/shop",
   ];
 
   const now = new Date();
