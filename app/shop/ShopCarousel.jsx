@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect = "1 / 1" }) {
+export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
   const total = designs.length;
+  const resolvedAspect = stageAspect || (columns === 4 && rows === 5 ? "5 / 6" : "1 / 1");
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -28,7 +29,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         <span>{index + 1} of {total}</span>
       </div>
 
-      <div className="shopCarouselStage" style={{ aspectRatio: stageAspect }}>
+      <div className="shopCarouselStage" style={{ aspectRatio: resolvedAspect }}>
         <img
           className="shopCarouselSprite"
           src={image}
