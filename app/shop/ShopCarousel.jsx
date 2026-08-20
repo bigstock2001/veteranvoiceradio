@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ShopCarousel({ image, designs, columns, rows, label }) {
+export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect = "1 / 1" }) {
   const [index, setIndex] = useState(0);
   const total = designs.length;
 
@@ -15,14 +15,8 @@ export default function ShopCarousel({ image, designs, columns, rows, label }) {
   }, [total]);
 
   const [code, name] = designs[index];
-
-  const position = useMemo(() => {
-    const col = index % columns;
-    const row = Math.floor(index / columns);
-    const x = columns === 1 ? 0 : (col / (columns - 1)) * 100;
-    const y = rows === 1 ? 0 : (row / (rows - 1)) * 100;
-    return `${x}% ${y}%`;
-  }, [index, columns, rows]);
+  const col = index % columns;
+  const row = Math.floor(index / columns);
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
@@ -34,15 +28,17 @@ export default function ShopCarousel({ image, designs, columns, rows, label }) {
         <span>{index + 1} of {total}</span>
       </div>
 
-      <div className="shopCarouselStage">
-        <div
+      <div className="shopCarouselStage" style={{ aspectRatio: stageAspect }}>
+        <img
           className="shopCarouselSprite"
-          role="img"
-          aria-label={`${code} — ${name}`}
+          src={image}
+          alt={`${code} — ${name}`}
+          draggable="false"
           style={{
-            backgroundImage: `url(${image})`,
-            backgroundSize: `${columns * 100}% ${rows * 100}%`,
-            backgroundPosition: position,
+            width: `${columns * 100}%`,
+            height: `${rows * 100}%`,
+            left: `-${col * 100}%`,
+            top: `-${row * 100}%`,
           }}
         />
 
