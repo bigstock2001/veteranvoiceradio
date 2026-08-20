@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
   const total = designs.length;
-  const resolvedAspect = stageAspect || (columns === 4 && rows === 5 ? "5 / 6" : "1 / 1");
+  const isBandana = columns === 4 && rows === 5;
+  const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
+  const maxStageWidth = isBandana ? 360 : 420;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -29,7 +31,15 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         <span>{index + 1} of {total}</span>
       </div>
 
-      <div className="shopCarouselStage" style={{ aspectRatio: resolvedAspect }}>
+      <div
+        className="shopCarouselStage"
+        style={{
+          aspectRatio: resolvedAspect,
+          width: "100%",
+          maxWidth: `${maxStageWidth}px`,
+          margin: "0 auto",
+        }}
+      >
         <img
           className="shopCarouselSprite"
           src={image}
