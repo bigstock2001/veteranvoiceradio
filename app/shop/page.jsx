@@ -1,3 +1,5 @@
+import ShopCarousel from "./ShopCarousel";
+
 export const metadata = {
   title: "Shop | Veteran Voice Radio",
   description:
@@ -39,11 +41,11 @@ const bandanaDesigns = [
   ["B17", "Kisses & Wagging Tails"],
 ];
 
-function DesignGrid({ designs }) {
+function DesignGrid({ designs, blue = false }) {
   return (
     <div className="shopDesignGrid">
       {designs.map(([code, name]) => (
-        <div className="shopDesign" key={code}>
+        <div className={`shopDesign ${blue ? "shopDesignBlue" : ""}`} key={code}>
           <span className="shopCode">{code}</span>
           <span>{name}</span>
         </div>
@@ -52,9 +54,8 @@ function DesignGrid({ designs }) {
   );
 }
 
-function ProductPreview({
-  image,
-  alt,
+function ProductSection({
+  id,
   label,
   title,
   price,
@@ -62,10 +63,13 @@ function ProductPreview({
   designs,
   link,
   buttonText,
+  image,
+  columns,
+  rows,
   blue = false,
 }) {
   return (
-    <section className={`shopProductSection ${blue ? "shopProductBlue" : ""}`}>
+    <section id={id} className={`shopProductSection ${blue ? "shopProductBlue" : ""}`}>
       <div className="shopProductHeader">
         <div>
           <div className="shopSectionEyebrow">{label}</div>
@@ -78,20 +82,20 @@ function ProductPreview({
       </div>
 
       <div className="shopPreviewLayout">
-        <div className="shopExampleCard">
-          <div className="shopExampleLabel">Design examples</div>
-          <img className="shopExampleImage" src={image} alt={alt} loading="lazy" />
-          <p className="shopExampleHelp">
-            Match the code on the example with the code you choose during Stripe checkout.
-          </p>
-        </div>
+        <ShopCarousel
+          image={image}
+          designs={designs}
+          columns={columns}
+          rows={rows}
+          label={`${title} examples`}
+        />
 
         <div className="shopDesignPanel">
           <p className="shopDescription">{description}</p>
           <h3>Choose your design</h3>
-          <DesignGrid designs={designs} />
+          <DesignGrid designs={designs} blue={blue} />
           <div className="shopRemember">
-            <strong>Remember your design code.</strong> You will select it again during checkout and enter your personalization there.
+            <strong>Remember your design code.</strong> You will select it during Stripe checkout and enter your personalization there.
           </div>
           <a className="shopButton" href={link} target="_blank" rel="noreferrer">
             {buttonText}
@@ -201,13 +205,16 @@ export default function ShopPage() {
           text-decoration: none;
           color: #fff;
           box-shadow: 0 12px 28px rgba(0,0,0,.25);
+          transition: transform .15s ease, border-color .15s ease;
         }
 
+        .shopQuickCard:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.26); }
         .shopQuickCard strong { display: block; font-size: 20px; }
         .shopQuickCard span { display: block; margin-top: 5px; color: rgba(255,255,255,.62); font-size: 13px; }
         .shopQuickArrow { font-size: 28px !important; color: #fca5a5 !important; margin: 0 !important; }
 
         .shopProductSection {
+          scroll-margin-top: 24px;
           margin-top: 34px;
           padding: 28px;
           border-radius: 24px;
@@ -275,45 +282,125 @@ export default function ShopPage() {
 
         .shopPreviewLayout {
           display: grid;
-          grid-template-columns: minmax(300px, .84fr) minmax(0, 1.16fr);
-          gap: 24px;
+          grid-template-columns: minmax(0, 1.12fr) minmax(320px, .88fr);
+          gap: 26px;
           align-items: start;
         }
 
-        .shopExampleCard, .shopDesignPanel {
-          border-radius: 18px;
+        .shopCarousel, .shopDesignPanel {
+          border-radius: 20px;
           border: 1px solid rgba(255,255,255,.11);
           background: rgba(255,255,255,.045);
         }
 
-        .shopExampleCard { padding: 16px; text-align: center; }
+        .shopCarousel { padding: 18px; }
         .shopDesignPanel { padding: 22px; }
 
-        .shopExampleLabel {
-          margin-bottom: 12px;
-          color: rgba(255,255,255,.7);
+        .shopCarouselTopline {
+          display: flex;
+          justify-content: space-between;
+          gap: 16px;
+          margin-bottom: 13px;
+          color: rgba(255,255,255,.68);
           font-size: 12px;
           font-weight: 900;
-          letter-spacing: .12em;
+          letter-spacing: .08em;
           text-transform: uppercase;
         }
 
-        .shopExampleImage {
-          display: block;
+        .shopCarouselStage {
+          position: relative;
           width: 100%;
-          max-width: 520px;
-          height: auto;
-          margin: 0 auto;
-          border-radius: 14px;
-          border: 1px solid rgba(255,255,255,.16);
-          box-shadow: 0 12px 28px rgba(0,0,0,.3);
+          aspect-ratio: 1 / 1;
+          overflow: hidden;
+          border-radius: 18px;
+          background: #0b1728;
+          border: 1px solid rgba(255,255,255,.14);
+          box-shadow: 0 18px 40px rgba(0,0,0,.35);
         }
 
-        .shopExampleHelp {
+        .shopCarouselSprite {
+          width: 100%;
+          height: 100%;
+          background-repeat: no-repeat;
+          transition: background-position .55s ease;
+        }
+
+        .shopCarouselArrow {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 48px;
+          height: 62px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255,255,255,.2);
+          border-radius: 14px;
+          background: rgba(3,7,18,.76);
+          color: #fff;
+          font-size: 42px;
+          line-height: 1;
+          cursor: pointer;
+          backdrop-filter: blur(8px);
+          transition: background .15s ease, transform .15s ease;
+        }
+
+        .shopCarouselArrow:hover {
+          background: rgba(15,23,42,.96);
+          transform: translateY(-50%) scale(1.04);
+        }
+
+        .shopCarouselPrev { left: 14px; }
+        .shopCarouselNext { right: 14px; }
+
+        .shopCarouselCaption {
+          display: flex;
+          align-items: baseline;
+          justify-content: center;
+          gap: 10px;
+          min-height: 32px;
+          margin-top: 15px;
+          text-align: center;
+        }
+
+        .shopCarouselCaption strong {
+          color: #fca5a5;
+          font-size: 20px;
+          font-weight: 950;
+        }
+
+        .shopProductBlue .shopCarouselCaption strong { color: #93c5fd; }
+        .shopCarouselCaption span { color: #fff; font-size: 17px; font-weight: 800; }
+
+        .shopCarouselDots {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 7px;
+          margin-top: 14px;
+        }
+
+        .shopCarouselDot {
+          width: 10px;
+          height: 10px;
+          padding: 0;
+          border: 0;
+          border-radius: 50%;
+          background: rgba(255,255,255,.26);
+          cursor: pointer;
+          transition: transform .15s ease, background .15s ease;
+        }
+
+        .shopCarouselDot:hover { transform: scale(1.25); background: rgba(255,255,255,.55); }
+        .shopCarouselDotActive { background: #ef4444; transform: scale(1.25); }
+        .shopProductBlue .shopCarouselDotActive { background: #60a5fa; }
+
+        .shopCarouselTimer {
           margin: 12px 0 0;
-          color: rgba(255,255,255,.58);
-          font-size: 12px;
-          line-height: 1.5;
+          text-align: center;
+          color: rgba(255,255,255,.48);
+          font-size: 11px;
+          line-height: 1.45;
         }
 
         .shopDescription {
@@ -425,18 +512,25 @@ export default function ShopPage() {
           line-height: 1.6;
         }
 
-        @media (max-width: 900px) {
-          .shopQuickLinks, .shopPreviewLayout, .shopSteps { grid-template-columns: 1fr; }
-          .shopProductHeader { align-items: flex-start; flex-direction: column; }
-          .shopTopOrder { width: 100%; }
-          .shopHero { padding: 42px 20px 56px; }
-          .shopWrap { width: min(100% - 22px, 1180px); }
-          .shopProductSection { padding: 18px; }
+        @media (max-width: 980px) {
+          .shopPreviewLayout { grid-template-columns: 1fr; }
+          .shopCarousel { max-width: 700px; margin: 0 auto; width: 100%; }
         }
 
-        @media (max-width: 560px) {
-          .shopDesignGrid { grid-template-columns: 1fr; }
-          .shopDesignPanel { padding: 16px; }
+        @media (max-width: 760px) {
+          .shopPage { padding-top: 22px; }
+          .shopWrap { width: min(100% - 20px, 1180px); }
+          .shopHero { padding: 42px 19px 58px; }
+          .shopQuickLinks, .shopSteps, .shopDesignGrid { grid-template-columns: 1fr; }
+          .shopProductSection { padding: 18px; }
+          .shopProductHeader { align-items: flex-start; flex-direction: column; }
+          .shopTopOrder { width: 100%; }
+          .shopCarousel { padding: 12px; }
+          .shopCarouselArrow { width: 42px; height: 54px; font-size: 36px; }
+          .shopCarouselPrev { left: 8px; }
+          .shopCarouselNext { right: 8px; }
+          .shopCarouselCaption { align-items: center; flex-direction: column; gap: 3px; }
+          .shopDesignPanel { padding: 17px; }
         }
       `}</style>
 
@@ -445,60 +539,64 @@ export default function ShopPage() {
           <p className="shopEyebrow">Veteran Voice Radio</p>
           <h1>Shop With Purpose.</h1>
           <p className="shopHeroLead">
-            Personalized decor and dog bandanas made with care. Every purchase helps support
-            Veteran Voice Radio and our mission to give veterans a voice through music,
-            storytelling, art, and community.
+            Personalized decor and dog bandanas made with care. Every purchase helps support Veteran Voice Radio and our mission to give veterans a voice through music, storytelling, art, and community.
           </p>
           <div className="shopMission">Made in the USA • Personalized for you • Supporting veterans</div>
         </section>
 
         <div className="shopQuickLinks">
           <a className="shopQuickCard" href="#wall-decor">
-            <div><strong>Door & Wall Decor</strong><span>See W01–W09 examples</span></div>
+            <div>
+              <strong>Door & Wall Decor</strong>
+              <span>9 personalized designs • Starting at $20</span>
+            </div>
             <span className="shopQuickArrow">→</span>
           </a>
-          <a className="shopQuickCard" href="#dog-bandanas">
-            <div><strong>Dog Bandanas</strong><span>See B01–B17 examples</span></div>
+          <a className="shopQuickCard" href="#bandanas">
+            <div>
+              <strong>Dog Bandanas</strong>
+              <span>17 personalized designs • Starting at $20</span>
+            </div>
             <span className="shopQuickArrow">→</span>
           </a>
         </div>
 
-        <div id="wall-decor">
-          <ProductPreview
-            image="/vvr-shop-wall-decor.webp"
-            alt="Veteran Voice Radio personalized door and wall decor design examples W01 through W09"
-            label="W01–W09"
-            title="Personalized Door & Wall Decor"
-            price="Starting at $20"
-            description="Choose the design you want, then personalize it with names, a family name, pet names, or another short message. Use the W-code shown with the example so there is no confusion about which design you selected."
-            designs={wallDesigns}
-            link={WALL_DECOR_LINK}
-            buttonText="Personalize & Order Wall Decor"
-          />
-        </div>
+        <ProductSection
+          id="wall-decor"
+          label="Personalized Door & Wall Decor"
+          title="Find the Design That Fits Your Home"
+          price="Starting at $20"
+          description="Browse the examples in the carousel. Each design has a unique W-code. Choose that same code during checkout, then enter the names, family name, pet names, or other personalization you want."
+          designs={wallDesigns}
+          link={WALL_DECOR_LINK}
+          buttonText="Personalize & Order Wall Decor"
+          image="/shop/vvr-shop-wall-decor.webp"
+          columns={3}
+          rows={3}
+        />
 
-        <div id="dog-bandanas">
-          <ProductPreview
-            image="/vvr-shop-bandanas.webp"
-            alt="Veteran Voice Radio personalized dog bandana design examples B01 through B17"
-            label="B01–B17"
-            title="Personalized Dog Bandanas"
-            price="Starting at $20"
-            description="Pick your favorite bandana design and add your pet's name or another short personalization. Every bandana now has a unique B-code, so you can choose the exact design you want during checkout."
-            designs={bandanaDesigns}
-            link={BANDANA_LINK}
-            buttonText="Personalize & Order Bandana"
-            blue
-          />
-        </div>
+        <ProductSection
+          id="bandanas"
+          label="Personalized Dog Bandanas"
+          title="Pick a Bandana for Your Best Friend"
+          price="Starting at $20"
+          description="The carousel lets you see each bandana much larger. Find the B-code you want, choose that code during Stripe checkout, and add your pet's name or other personalization."
+          designs={bandanaDesigns}
+          link={BANDANA_LINK}
+          buttonText="Personalize & Order a Bandana"
+          image="/shop/vvr-shop-bandanas.webp"
+          columns={4}
+          rows={5}
+          blue
+        />
 
         <section className="shopHow">
           <h2>How ordering works</h2>
           <div className="shopSteps">
-            <div className="shopStep"><div className="shopStepNo">1</div><strong>Choose a product</strong><span>Select personalized decor or a dog bandana.</span></div>
-            <div className="shopStep"><div className="shopStepNo">2</div><strong>Pick the design</strong><span>Use the W or B code shown beside the example you want.</span></div>
-            <div className="shopStep"><div className="shopStepNo">3</div><strong>Add personalization</strong><span>Enter names, pet names, or special wording during Stripe checkout.</span></div>
-            <div className="shopStep"><div className="shopStepNo">4</div><strong>Pay securely</strong><span>Stripe collects payment, contact information, quantity, and your U.S. shipping address.</span></div>
+            <div className="shopStep"><div className="shopStepNo">1</div><strong>Browse the carousel</strong><span>See one design at a time in a much larger view.</span></div>
+            <div className="shopStep"><div className="shopStepNo">2</div><strong>Remember the code</strong><span>Use the W or B code shown under the design.</span></div>
+            <div className="shopStep"><div className="shopStepNo">3</div><strong>Add personalization</strong><span>Enter names, pet names, or special wording during checkout.</span></div>
+            <div className="shopStep"><div className="shopStepNo">4</div><strong>Pay securely</strong><span>Stripe collects payment, contact information, and your U.S. shipping address.</span></div>
           </div>
         </section>
 
