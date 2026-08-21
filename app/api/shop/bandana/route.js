@@ -1,31 +1,11 @@
-import fs from "node:fs/promises";
-import path from "node:path";
+import BANDANA_BASE64 from "./generated";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const chunkFiles = [
-  "app/shop/hires/bandana0.js",
-  "app/shop/hires/bandana1.js",
-  "app/shop/hires/bandana2.js",
-  "app/shop/hires/bandana3.js",
-  "app/shop/hires/bandana4.js",
-];
-
 export async function GET() {
   try {
-    let base64 = "";
-
-    for (const relativePath of chunkFiles) {
-      const source = await fs.readFile(path.join(process.cwd(), relativePath), "utf8");
-      const match = source.match(/const chunk = "([A-Za-z0-9+/=]+)";/);
-      if (!match) {
-        throw new Error(`Unable to read ${relativePath}`);
-      }
-      base64 += match[1];
-    }
-
-    const bytes = Buffer.from(base64, "base64");
+    const bytes = Buffer.from(BANDANA_BASE64, "base64");
     const validWebp =
       bytes.subarray(0, 4).toString("ascii") === "RIFF" &&
       bytes.subarray(8, 12).toString("ascii") === "WEBP";
