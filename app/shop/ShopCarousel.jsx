@@ -8,6 +8,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 300 : 330;
+  const bandanaImage = "/shop/bandana-hires.webp";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -57,7 +58,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         {isBandana ? (
           <img
             className="shopCarouselSprite"
-            src={image}
+            src={bandanaImage}
             alt={`${code} — ${name}`}
             draggable="false"
             style={{
