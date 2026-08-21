@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import bandanaHiRes from "./hires/bandana";
 
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
@@ -8,6 +9,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 300 : 330;
+  const spriteImage = isBandana ? bandanaHiRes : image;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -57,7 +59,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         {isBandana ? (
           <img
             className="shopCarouselSprite"
-            src={image}
+            src={spriteImage}
             alt={`${code} — ${name}`}
             draggable="false"
             style={{
