@@ -8,7 +8,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 300 : 330;
-  const bandanaImage = "/api/shop/bandana";
+  const bandanaImage = "/api/shop/bandana?v=3";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -22,6 +22,9 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const row = Math.floor(index / columns);
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
+
+  const backgroundX = columns > 1 ? (col / (columns - 1)) * 100 : 0;
+  const backgroundY = rows > 1 ? (row / (rows - 1)) * 100 : 0;
 
   return (
     <div className="shopCarousel" aria-label={`${label} design carousel`}>
@@ -56,22 +59,19 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         style={{ aspectRatio: resolvedAspect, width: "100%", maxWidth: `${maxStageWidth}px`, margin: "0 auto" }}
       >
         {isBandana ? (
-          <img
-            className="shopCarouselSprite"
-            src={bandanaImage}
-            alt={`${code} — ${name}`}
-            draggable="false"
+          <div
+            role="img"
+            aria-label={`${code} — ${name}`}
             style={{
               position: "absolute",
-              display: "block",
-              maxWidth: "none",
-              width: `${columns * 100}%`,
-              height: `${rows * 100}%`,
-              left: `-${col * 100}%`,
-              top: `-${row * 100}%`,
-              objectFit: "fill",
-              transition: "left .55s ease, top .55s ease",
-              userSelect: "none",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              backgroundImage: `url(${bandanaImage})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: `${columns * 100}% ${rows * 100}%`,
+              backgroundPosition: `${backgroundX}% ${backgroundY}%`,
+              transition: "background-position .35s ease",
             }}
           />
         ) : (
