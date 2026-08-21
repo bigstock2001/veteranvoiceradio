@@ -7,8 +7,8 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const total = designs.length;
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
-  const maxStageWidth = isBandana ? 300 : 330;
-  const bandanaImage = "/api/shop/bandana?v=3";
+  const maxStageWidth = isBandana ? 420 : 330;
+  const bandanaImage = "/api/shop/bandana?v=4";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -18,13 +18,8 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = designs[index];
-  const col = index % columns;
-  const row = Math.floor(index / columns);
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
-
-  const backgroundX = columns > 1 ? (col / (columns - 1)) * 100 : 0;
-  const backgroundY = rows > 1 ? (row / (rows - 1)) * 100 : 0;
 
   return (
     <div className="shopCarousel" aria-label={`${label} design carousel`}>
@@ -56,22 +51,28 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
 
       <div
         className="shopCarouselStage"
-        style={{ aspectRatio: resolvedAspect, width: "100%", maxWidth: `${maxStageWidth}px`, margin: "0 auto" }}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          aspectRatio: isBandana ? "2 / 3" : resolvedAspect,
+          width: "100%",
+          maxWidth: `${maxStageWidth}px`,
+          margin: "0 auto",
+        }}
       >
         {isBandana ? (
-          <div
-            role="img"
-            aria-label={`${code} — ${name}`}
+          <img
+            src={bandanaImage}
+            alt="All high-resolution bandana designs"
+            draggable="false"
             style={{
-              position: "absolute",
-              inset: 0,
+              display: "block",
+              position: "relative",
               width: "100%",
               height: "100%",
-              backgroundImage: `url(${bandanaImage})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: `${columns * 100}% ${rows * 100}%`,
-              backgroundPosition: `${backgroundX}% ${backgroundY}%`,
-              transition: "background-position .35s ease",
+              maxWidth: "none",
+              objectFit: "contain",
+              zIndex: 1,
             }}
           />
         ) : (
@@ -91,8 +92,8 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           />
         )}
 
-        <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34 }}>‹</button>
-        <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34 }}>›</button>
+        <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>‹</button>
+        <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>›</button>
       </div>
 
       <div className="shopCarouselDots" aria-label="Choose a design slide">
