@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import bandanaHiRes from "./hires/bandana";
 
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
@@ -57,7 +58,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         {isBandana ? (
           <img
             className="shopCarouselSprite"
-            src={image}
+            src={bandanaHiRes}
             alt={`${code} — ${name}`}
             draggable="false"
             style={{
