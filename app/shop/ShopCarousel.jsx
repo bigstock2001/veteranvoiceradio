@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { WALL_HIRES } from "./hires";
 
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
@@ -9,7 +8,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 300 : 330;
-  const resolvedImage = isBandana ? image : WALL_HIRES;
+  const resolvedImage = isBandana ? image : "/shop/wall-hires.avif";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
