@@ -8,20 +8,17 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 300 : 330;
-  const resolvedImage = isBandana ? image : "/shop/wall-hires.avif";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setIndex((current) => (current + 1) % total);
     }, 10000);
-
     return () => window.clearInterval(timer);
   }, [total]);
 
   const [code, name] = designs[index];
   const col = index % columns;
   const row = Math.floor(index / columns);
-
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
 
@@ -57,24 +54,41 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         className="shopCarouselStage"
         style={{ aspectRatio: resolvedAspect, width: "100%", maxWidth: `${maxStageWidth}px`, margin: "0 auto" }}
       >
-        <img
-          className="shopCarouselSprite"
-          src={resolvedImage}
-          alt={`${code} — ${name}`}
-          draggable="false"
-          style={{
-            position: "absolute",
-            display: "block",
-            maxWidth: "none",
-            width: `${columns * 100}%`,
-            height: `${rows * 100}%`,
-            left: `-${col * 100}%`,
-            top: `-${row * 100}%`,
-            objectFit: "fill",
-            transition: "left .55s ease, top .55s ease",
-            userSelect: "none",
-          }}
-        />
+        {isBandana ? (
+          <img
+            className="shopCarouselSprite"
+            src={image}
+            alt={`${code} — ${name}`}
+            draggable="false"
+            style={{
+              position: "absolute",
+              display: "block",
+              maxWidth: "none",
+              width: `${columns * 100}%`,
+              height: `${rows * 100}%`,
+              left: `-${col * 100}%`,
+              top: `-${row * 100}%`,
+              objectFit: "fill",
+              transition: "left .55s ease, top .55s ease",
+              userSelect: "none",
+            }}
+          />
+        ) : (
+          <img
+            src={`/shop/wall/${code}.avif`}
+            alt={`${code} — ${name}`}
+            draggable="false"
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              userSelect: "none",
+            }}
+          />
+        )}
 
         <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34 }}>‹</button>
         <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34 }}>›</button>
