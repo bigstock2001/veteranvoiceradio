@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { WALL_HIRES } from "./hires";
 
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
   const total = designs.length;
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
-  // The source flyer only contains about 250–330px of real detail per design.
-  // Keep each design near that natural size instead of enlarging it into blur.
   const maxStageWidth = isBandana ? 300 : 330;
+  const resolvedImage = isBandana ? image : WALL_HIRES;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -46,41 +46,21 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           boxShadow: "0 10px 24px rgba(0,0,0,.22)",
         }}
       >
-        <div
-          style={{
-            color: isBandana ? "#93c5fd" : "#fca5a5",
-            fontSize: "15px",
-            fontWeight: 950,
-            letterSpacing: ".12em",
-          }}
-        >
+        <div style={{ color: isBandana ? "#93c5fd" : "#fca5a5", fontSize: "15px", fontWeight: 950, letterSpacing: ".12em" }}>
           DESIGN {code}
         </div>
-        <div
-          style={{
-            marginTop: "5px",
-            color: "#fff",
-            fontSize: "clamp(22px, 3vw, 28px)",
-            lineHeight: 1.15,
-            fontWeight: 950,
-          }}
-        >
+        <div style={{ marginTop: "5px", color: "#fff", fontSize: "clamp(22px, 3vw, 28px)", lineHeight: 1.15, fontWeight: 950 }}>
           {name}
         </div>
       </div>
 
       <div
         className="shopCarouselStage"
-        style={{
-          aspectRatio: resolvedAspect,
-          width: "100%",
-          maxWidth: `${maxStageWidth}px`,
-          margin: "0 auto",
-        }}
+        style={{ aspectRatio: resolvedAspect, width: "100%", maxWidth: `${maxStageWidth}px`, margin: "0 auto" }}
       >
         <img
           className="shopCarouselSprite"
-          src={image}
+          src={resolvedImage}
           alt={`${code} — ${name}`}
           draggable="false"
           style={{
@@ -97,24 +77,8 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           }}
         />
 
-        <button
-          type="button"
-          className="shopCarouselArrow shopCarouselPrev"
-          onClick={previous}
-          aria-label="Previous design"
-          style={{ width: 40, height: 52, fontSize: 34 }}
-        >
-          ‹
-        </button>
-        <button
-          type="button"
-          className="shopCarouselArrow shopCarouselNext"
-          onClick={next}
-          aria-label="Next design"
-          style={{ width: 40, height: 52, fontSize: 34 }}
-        >
-          ›
-        </button>
+        <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34 }}>‹</button>
+        <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34 }}>›</button>
       </div>
 
       <div className="shopCarouselDots" aria-label="Choose a design slide">
