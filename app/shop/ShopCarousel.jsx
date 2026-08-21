@@ -1,15 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import bandanaHiRes from "./hires/bandana";
 
-export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
+export default function ShopCarousel({ designs, columns, rows, label, stageAspect }) {
   const [index, setIndex] = useState(0);
   const total = designs.length;
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 300 : 330;
-  const spriteImage = isBandana ? bandanaHiRes : image;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -19,8 +17,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = designs[index];
-  const col = index % columns;
-  const row = Math.floor(index / columns);
+  const designImage = isBandana ? `/shop/bandana/${code}.svg` : `/shop/wall/${code}.avif`;
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
 
@@ -56,41 +53,20 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         className="shopCarouselStage"
         style={{ aspectRatio: resolvedAspect, width: "100%", maxWidth: `${maxStageWidth}px`, margin: "0 auto" }}
       >
-        {isBandana ? (
-          <img
-            className="shopCarouselSprite"
-            src={spriteImage}
-            alt={`${code} — ${name}`}
-            draggable="false"
-            style={{
-              position: "absolute",
-              display: "block",
-              maxWidth: "none",
-              width: `${columns * 100}%`,
-              height: `${rows * 100}%`,
-              left: `-${col * 100}%`,
-              top: `-${row * 100}%`,
-              objectFit: "fill",
-              transition: "left .55s ease, top .55s ease",
-              userSelect: "none",
-            }}
-          />
-        ) : (
-          <img
-            src={`/shop/wall/${code}.avif`}
-            alt={`${code} — ${name}`}
-            draggable="false"
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "block",
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-            }}
-          />
-        )}
+        <img
+          src={designImage}
+          alt={`${code} — ${name}`}
+          draggable="false"
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "block",
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            userSelect: "none",
+          }}
+        />
 
         <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34 }}>‹</button>
         <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34 }}>›</button>
