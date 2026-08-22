@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 
 const chunkFiles = [0, 1, 2, 3, 4].map((n) =>
   path.resolve(`app/shop/hires/bandana${n}.js`)
@@ -21,16 +22,37 @@ if (
   throw new Error("Bandana high-resolution source did not decode to a valid WebP image.");
 }
 
-const publicDir = path.resolve("public/shop");
-await fs.mkdir(publicDir, { recursive: true });
-await fs.writeFile(path.join(publicDir, "bandana-hires.webp"), bytes);
+const image = sharp(bytes);
+const metadata = await image.metadata();
+if (!metadata.width || !metadata.height) {
+  throw new Error("Could not read high-resolution bandana dimensions.");
+}
 
-const generatedDir = path.resolve("app/api/shop/bandana");
-await fs.mkdir(generatedDir, { recursive: true });
-await fs.writeFile(
-  path.join(generatedDir, "generated.js"),
-  `const BANDANA_BASE64 = ${JSON.stringify(base64)};\nexport default BANDANA_BASE64;\n`,
-  "utf8"
+const columns = 4;
+const rows = 5;
+const totalDesigns = 17;
+const cellWidth = Math.floor(metadata.width / columns);
+const cellHeight = Math.floor(metadata.height / rows);
+
+const outDir = path.resolve("public/shop/bandana");
+await fs.mkdir(outDir, { recursive: true });
+
+for (let index = 0; index < totalDesigns; index += 1) {
+  const col = index % columns;
+  const row = Math.floor(index / columns);
+  const code = `B${String(index + 1).padStart(2, "0")}`;
+
+  await sharp(bytes)
+    .extract({
+      left: col * cellWidth,
+      top: row * cellHeight,
+      width: cellWidth,
+      height: cellHeight,
+    })
+    .webp({ quality: 92 })
+    .toFile(path.join(outDir, `${code}.webp`));
+}
+
+console.log(
+  `Built B01-B17 as individual bandana files from ${metadata.width}x${metadata.height} source.`
 );
-
-console.log(`Built high-resolution bandana image (${bytes.length} bytes)`);
