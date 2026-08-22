@@ -8,7 +8,6 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   const isBandana = columns === 4 && rows === 5;
   const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
   const maxStageWidth = isBandana ? 420 : 330;
-  const bandanaImage = "/api/shop/bandana?v=4";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -18,6 +17,10 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = designs[index];
+  const designImage = isBandana
+    ? `/shop/bandana/${code}.webp`
+    : `/shop/wall/${code}.avif`;
+
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
 
@@ -54,43 +57,26 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         style={{
           position: "relative",
           overflow: "hidden",
-          aspectRatio: isBandana ? "2 / 3" : resolvedAspect,
+          aspectRatio: resolvedAspect,
           width: "100%",
           maxWidth: `${maxStageWidth}px`,
           margin: "0 auto",
         }}
       >
-        {isBandana ? (
-          <img
-            src={bandanaImage}
-            alt="All high-resolution bandana designs"
-            draggable="false"
-            style={{
-              display: "block",
-              position: "relative",
-              width: "100%",
-              height: "100%",
-              maxWidth: "none",
-              objectFit: "contain",
-              zIndex: 1,
-            }}
-          />
-        ) : (
-          <img
-            src={`/shop/wall/${code}.avif`}
-            alt={`${code} — ${name}`}
-            draggable="false"
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "block",
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-            }}
-          />
-        )}
+        <img
+          src={designImage}
+          alt={`${code} — ${name}`}
+          draggable="false"
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "block",
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            userSelect: "none",
+          }}
+        />
 
         <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>‹</button>
         <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>›</button>
