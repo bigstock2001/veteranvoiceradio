@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import ffmpegPath from "ffmpeg-static";
 import sharp from "sharp";
 
+const execFileAsync = promisify(execFile);
 const chunks = [];
 for (let n = 0; n < 5; n += 1) {
   const file = path.resolve(`app/shop/hires/bandana${n}.js`);
@@ -12,24 +16,35 @@ for (let n = 0; n < 5; n += 1) {
   console.log(`bandana${n}: ${match[1].length} base64 chars`);
 }
 
-// bandana1 was truncated by 175 base64 characters when originally saved.
-// Restore the missing span with neutral base64 data only as a decoder-recovery test.
-const repairedBase64 = chunks[0] + chunks[1] + "A".repeat(175) + chunks[2] + chunks[3] + chunks[4];
-const bytes = Buffer.from(repairedBase64, "base64");
-console.log(`Repaired candidate bytes: ${bytes.length}`);
+const corruptBytes = Buffer.from(chunks.join(""), "base64");
+const workDir = path.resolve(".bandana-recovery");
+const outDir = path.resolve("public/shop/bandana-test");
+await fs.mkdir(workDir, { recursive: true });
+await fs.mkdir(outDir, { recursive: true });
 
-if (
-  bytes.subarray(0, 4).toString("ascii") !== "RIFF" ||
-  bytes.subarray(8, 12).toString("ascii") !== "WEBP"
-) {
-  throw new Error("Candidate is not a WebP container.");
+const inputPath = path.join(workDir, "bandana-corrupt.webp");
+const recoveredPng = path.join(outDir, "recovered.png");
+await fs.writeFile(inputPath, corruptBytes);
+console.log(`Corrupt source bytes: ${corruptBytes.length}`);
+console.log(`ffmpeg: ${ffmpegPath}`);
+
+try {
+  const { stdout, stderr } = await execFileAsync(ffmpegPath, [
+    "-y",
+    "-v", "warning",
+    "-err_detect", "ignore_err",
+    "-fflags", "+discardcorrupt",
+    "-i", inputPath,
+    "-frames:v", "1",
+    recoveredPng,
+  ], { maxBuffer: 10 * 1024 * 1024 });
+  if (stdout) console.log(stdout);
+  if (stderr) console.log(stderr);
+} catch (error) {
+  console.log("ffmpeg recovery failed:", error.stderr || error.message);
+  throw error;
 }
 
-const metadata = await sharp(bytes, { failOn: "none" }).metadata();
-console.log("Recovered metadata:", metadata);
-
-const outDir = path.resolve("public/shop/bandana-test");
-await fs.mkdir(outDir, { recursive: true });
-await sharp(bytes, { failOn: "none" }).webp({ quality: 95 }).toFile(path.join(outDir, "recovered.webp"));
-
+const metadata = await sharp(recoveredPng).metadata();
+console.log("Recovered PNG metadata:", metadata);
 console.log("Recovered test image written.");
