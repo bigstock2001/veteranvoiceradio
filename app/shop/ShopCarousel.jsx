@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
+export default function ShopCarousel({ designs, columns, rows, label, stageAspect }) {
   const isBandana = columns === 4 && rows === 5;
   const visibleDesigns = isBandana ? designs.slice(0, 10) : designs;
   const total = visibleDesigns.length;
@@ -18,13 +18,9 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = visibleDesigns[index];
-  const dogSpriteColumns = 2;
-  const dogSpriteRows = 5;
-  const spriteColumn = index % dogSpriteColumns;
-  const spriteRow = Math.floor(index / dogSpriteColumns);
-  const spriteX = spriteColumn * 100;
-  const spriteY = dogSpriteRows > 1 ? (spriteRow / (dogSpriteRows - 1)) * 100 : 0;
-  const designImage = `/shop/wall/${code}.avif`;
+  const designImage = isBandana
+    ? `/shop/bandana/${code}.webp`
+    : `/shop/wall/${code}.avif`;
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
@@ -68,35 +64,23 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           margin: "0 auto",
         }}
       >
-        {isBandana ? (
-          <div
-            role="img"
-            aria-label={`${code} — ${name}; dog wearing the bandanna`}
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: "url(/api/shop/dog-bandanas)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: `${dogSpriteColumns * 100}% ${dogSpriteRows * 100}%`,
-              backgroundPosition: `${spriteX}% ${spriteY}%`,
-            }}
-          />
-        ) : (
-          <img
-            src={designImage}
-            alt={`${code} — ${name}`}
-            draggable="false"
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "block",
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-            }}
-          />
-        )}
+        <img
+          key={designImage}
+          src={designImage}
+          alt={isBandana ? `${code} — ${name}; dog wearing the bandanna` : `${code} — ${name}`}
+          draggable="false"
+          loading="eager"
+          decoding="sync"
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "block",
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            userSelect: "none",
+          }}
+        />
 
         <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>‹</button>
         <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>›</button>
