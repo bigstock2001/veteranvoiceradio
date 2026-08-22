@@ -18,12 +18,12 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = visibleDesigns[index];
-  const dogSpriteColumns = 2;
-  const dogSpriteRows = 5;
+  const dogSpriteColumns = 5;
+  const dogSpriteRows = 2;
   const spriteColumn = index % dogSpriteColumns;
   const spriteRow = Math.floor(index / dogSpriteColumns);
-  const spriteX = spriteColumn * 100;
-  const spriteY = (spriteRow / (dogSpriteRows - 1)) * 100;
+  const spriteX = dogSpriteColumns > 1 ? (spriteColumn / (dogSpriteColumns - 1)) * 100 : 0;
+  const spriteY = dogSpriteRows > 1 ? (spriteRow / (dogSpriteRows - 1)) * 100 : 0;
   const designImage = `/shop/wall/${code}.avif`;
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
@@ -75,7 +75,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
             style={{
               position: "absolute",
               inset: 0,
-              backgroundImage: "url(/api/shop/dog-bandanas)",
+              backgroundImage: "url(/shop/dog-bandanas.webp)",
               backgroundRepeat: "no-repeat",
               backgroundSize: `${dogSpriteColumns * 100}% ${dogSpriteRows * 100}%`,
               backgroundPosition: `${spriteX}% ${spriteY}%`,
