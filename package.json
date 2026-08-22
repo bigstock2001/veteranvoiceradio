@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/analyze-hires-webp.mjs",
+    "prebuild": "node scripts/test-tail-repair.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
