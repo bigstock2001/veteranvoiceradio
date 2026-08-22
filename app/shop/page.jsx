@@ -6,8 +6,8 @@ export const metadata = {
     "Shop personalized Veteran Voice Radio door and wall decor and dog bandanas. Every purchase supports our veteran-focused mission.",
 };
 
-const WALL_DECOR_LINK = "https://buy.stripe.com/9B628s1J77vN27X7zCfbq02";
-const BANDANA_LINK = "https://buy.stripe.com/8x25kE2Nb5nFfYN5rufbq03";
+const WALL_DECOR_LINK = "https://buy.stripe.com/00w8wQ0F36rJfYN4nqfbq08";
+const BANDANA_LINK = "https://buy.stripe.com/7sY9AUcnL7vN7sh9HKfbq09";
 
 const wallDesigns = [
   ["W01", "Welcome to Our Patch"],
@@ -548,7 +548,7 @@ export default function ShopPage() {
           <a className="shopQuickCard" href="#wall-decor">
             <div>
               <strong>Door & Wall Decor</strong>
-              <span>9 personalized designs • Starting at $20</span>
+              <span>9 personalized designs • Starting at $25</span>
             </div>
             <span className="shopQuickArrow">→</span>
           </a>
@@ -565,8 +565,8 @@ export default function ShopPage() {
           id="wall-decor"
           label="Personalized Door & Wall Decor"
           title="Find the Design That Fits Your Home"
-          price="Starting at $20"
-          description="Browse the examples in the carousel. Each design has a unique W-code. Choose that same code during checkout, then enter the names, family name, pet names, or other personalization you want."
+          price="$25 + $6 shipping"
+          description="Browse the examples in the carousel. Each design has a unique W-code. Choose that same code during checkout, then enter the names, family name, pet names, or other personalization you want. The $25 price includes one custom line; each additional custom line is $5. Because every piece is custom made and shipped to you, please allow 7–14 days for delivery."
           designs={wallDesigns}
           link={WALL_DECOR_LINK}
           buttonText="Personalize & Order Wall Decor"
@@ -579,8 +579,8 @@ export default function ShopPage() {
           id="bandanas"
           label="Personalized Dog Bandanas"
           title="Pick a Bandana for Your Best Friend"
-          price="Starting at $20"
-          description="The carousel lets you see each bandana much larger. Find the B-code you want, choose that code during Stripe checkout, and add your pet's name or other personalization."
+          price="$20 + $3 shipping"
+          description="The carousel lets you see each bandana much larger. Find the B-code you want, choose that code during Stripe checkout, and add your pet's name or other personalization. The $20 price includes one patch; each additional patch is $5. Because every bandana is custom made and shipped to you, please allow 7–14 days for delivery."
           designs={bandanaDesigns}
           link={BANDANA_LINK}
           buttonText="Personalize & Order a Bandana"
