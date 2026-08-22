@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
-  const [index, setIndex] = useState(0);
-  const total = designs.length;
   const isBandana = columns === 4 && rows === 5;
-  const resolvedAspect = stageAspect || (isBandana ? "5 / 6" : "1 / 1");
+  const visibleDesigns = isBandana ? designs.slice(0, 10) : designs;
+  const total = visibleDesigns.length;
+  const [index, setIndex] = useState(0);
+  const resolvedAspect = stageAspect || (isBandana ? "4 / 5" : "1 / 1");
   const maxStageWidth = isBandana ? 420 : 330;
 
   useEffect(() => {
@@ -16,11 +17,13 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
     return () => window.clearInterval(timer);
   }, [total]);
 
-  const [code, name] = designs[index];
-  const spriteColumn = index % columns;
-  const spriteRow = Math.floor(index / columns);
-  const spriteX = columns > 1 ? (spriteColumn / (columns - 1)) * 100 : 0;
-  const spriteY = rows > 1 ? (spriteRow / (rows - 1)) * 100 : 0;
+  const [code, name] = visibleDesigns[index];
+  const dogSpriteColumns = 2;
+  const dogSpriteRows = 5;
+  const spriteColumn = index % dogSpriteColumns;
+  const spriteRow = Math.floor(index / dogSpriteColumns);
+  const spriteX = spriteColumn * 100;
+  const spriteY = (spriteRow / (dogSpriteRows - 1)) * 100;
   const designImage = `/shop/wall/${code}.avif`;
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
@@ -68,13 +71,13 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         {isBandana ? (
           <div
             role="img"
-            aria-label={`${code} — ${name}`}
+            aria-label={`${code} — ${name}; dog wearing the bandanna`}
             style={{
               position: "absolute",
               inset: 0,
-              backgroundImage: `url(${image})`,
+              backgroundImage: "url(/api/shop/dog-bandanas)",
               backgroundRepeat: "no-repeat",
-              backgroundSize: `${columns * 100}% ${rows * 100}%`,
+              backgroundSize: `${dogSpriteColumns * 100}% ${dogSpriteRows * 100}%`,
               backgroundPosition: `${spriteX}% ${spriteY}%`,
             }}
           />
@@ -100,7 +103,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
       </div>
 
       <div className="shopCarouselDots" aria-label="Choose a design slide">
-        {designs.map(([dotCode], dotIndex) => (
+        {visibleDesigns.map(([dotCode], dotIndex) => (
           <button
             type="button"
             key={dotCode}
@@ -112,7 +115,9 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
         ))}
       </div>
 
-      <p className="shopCarouselTimer">Automatically advances every 10 seconds. Use the arrows or dots anytime.</p>
+      <p className="shopCarouselTimer">
+        {isBandana ? "10 dog-photo previews from the current set. " : ""}Automatically advances every 10 seconds. Use the arrows or dots anytime.
+      </p>
     </div>
   );
 }
