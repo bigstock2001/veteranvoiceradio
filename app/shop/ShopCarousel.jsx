@@ -18,7 +18,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
 
   const [code, name] = designs[index];
   const designImage = isBandana
-    ? `/shop/bandana/${code}.webp`
+    ? `/shop/bandana/${code}.svg`
     : `/shop/wall/${code}.avif`;
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
