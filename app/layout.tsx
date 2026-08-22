@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import Script from "next/script"; // ✅ Added
+import Script from "next/script";
 import "./globals.css";
 import RadioPlayerProvider from "@/components/RadioPlayerProvider";
 import StickyPlayerBar from "@/components/StickyPlayerBar";
@@ -21,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* ✅ Google Analytics Tag */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-RLQ6D8W4M5"
           strategy="afterInteractive"
@@ -72,6 +71,10 @@ export default function RootLayout({
 
                   <Link className="navLink" href="/freedom-fest">
                     Freedom Fest
+                  </Link>
+
+                  <Link className="navLink" href="/freedom-fest/tickets">
+                    Tickets
                   </Link>
 
                   <Link className="navLink" href="/shop">
@@ -142,15 +145,12 @@ export default function RootLayout({
                   left: 0;
                   top: 100%;
                   z-index: 9999;
-
                   display: none;
                   flex-direction: column;
                   gap: 6px;
-
                   min-width: 220px;
                   padding: 10px;
                   border-radius: 12px;
-
                   background: rgba(15, 18, 25, 0.98);
                   border: 1px solid rgba(255, 255, 255, 0.12);
                   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
@@ -177,7 +177,6 @@ export default function RootLayout({
                   padding: 10px 12px;
                   border-radius: 10px;
                   text-decoration: none;
-
                   color: rgba(255, 255, 255, 0.92);
                   font-weight: 600;
                   line-height: 1.2;
@@ -189,10 +188,83 @@ export default function RootLayout({
                   background: rgba(255, 255, 255, 0.10);
                   outline: none;
                 }
+
+                .freedomTicketNeon {
+                  position: fixed;
+                  right: 18px;
+                  bottom: 112px;
+                  z-index: 9998;
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  min-height: 56px;
+                  padding: 0 22px;
+                  border-radius: 999px;
+                  border: 2px solid #fff;
+                  background: linear-gradient(90deg, #dc2626 0%, #7c3aed 50%, #2563eb 100%);
+                  color: #fff;
+                  text-decoration: none;
+                  font-size: 15px;
+                  font-weight: 950;
+                  letter-spacing: .035em;
+                  text-transform: uppercase;
+                  text-shadow: 0 0 7px rgba(255,255,255,.9);
+                  box-shadow:
+                    0 0 8px rgba(255,255,255,.9),
+                    0 0 18px rgba(239,68,68,.9),
+                    0 0 34px rgba(37,99,235,.8),
+                    0 12px 34px rgba(0,0,0,.48);
+                  animation: freedomTicketPulse 1.15s ease-in-out infinite alternate;
+                }
+
+                .freedomTicketNeon:hover,
+                .freedomTicketNeon:focus-visible {
+                  transform: scale(1.045);
+                  filter: brightness(1.15);
+                  outline: none;
+                }
+
+                @keyframes freedomTicketPulse {
+                  0% {
+                    box-shadow:
+                      0 0 6px rgba(255,255,255,.75),
+                      0 0 13px rgba(239,68,68,.7),
+                      0 0 24px rgba(37,99,235,.62),
+                      0 10px 28px rgba(0,0,0,.4);
+                    opacity: .88;
+                  }
+                  100% {
+                    box-shadow:
+                      0 0 10px rgba(255,255,255,1),
+                      0 0 26px rgba(239,68,68,1),
+                      0 0 46px rgba(37,99,235,.95),
+                      0 14px 38px rgba(0,0,0,.52);
+                    opacity: 1;
+                  }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                  .freedomTicketNeon { animation: none; }
+                }
+
+                @media (max-width: 700px) {
+                  .freedomTicketNeon {
+                    left: 12px;
+                    right: 12px;
+                    bottom: 104px;
+                    min-height: 52px;
+                    padding: 0 14px;
+                    font-size: 13px;
+                  }
+                }
               `}</style>
             </header>
 
             <main className="main">{children}</main>
+
+            <Link className="freedomTicketNeon" href="/freedom-fest/tickets" aria-label="Buy Freedom Fest tickets">
+              🎟 Buy Freedom Fest Tickets — Presale $5 / $10
+            </Link>
 
             <footer className="footer">
               <div className="container footerInner">
