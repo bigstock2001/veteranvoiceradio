@@ -17,9 +17,11 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = designs[index];
-  const designImage = isBandana
-    ? (index < 10 ? `/shop/bandana/${code}.webp` : image)
-    : `/shop/wall/${code}.avif`;
+  const spriteColumn = index % columns;
+  const spriteRow = Math.floor(index / columns);
+  const spriteX = columns > 1 ? (spriteColumn / (columns - 1)) * 100 : 0;
+  const spriteY = rows > 1 ? (spriteRow / (rows - 1)) * 100 : 0;
+  const designImage = `/shop/wall/${code}.avif`;
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
@@ -63,20 +65,35 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           margin: "0 auto",
         }}
       >
-        <img
-          src={designImage}
-          alt={`${code} — ${name}`}
-          draggable="false"
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "block",
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            userSelect: "none",
-          }}
-        />
+        {isBandana ? (
+          <div
+            role="img"
+            aria-label={`${code} — ${name}`}
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${image})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: `${columns * 100}% ${rows * 100}%`,
+              backgroundPosition: `${spriteX}% ${spriteY}%`,
+            }}
+          />
+        ) : (
+          <img
+            src={designImage}
+            alt={`${code} — ${name}`}
+            draggable="false"
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              userSelect: "none",
+            }}
+          />
+        )}
 
         <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>‹</button>
         <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>›</button>
