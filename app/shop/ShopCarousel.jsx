@@ -101,6 +101,69 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
       <p className="shopCarouselTimer">
         {isBandana ? `${total} dog-photo previews from the uploaded product images. ` : ""}Automatically advances every 10 seconds. Use the arrows or dots anytime.
       </p>
+
+      {isBandana && (
+        <section
+          aria-label="Custom order questions"
+          style={{
+            marginTop: "30px",
+            padding: "24px",
+            borderRadius: "18px",
+            border: "1px solid rgba(147,197,253,.28)",
+            background: "linear-gradient(145deg, rgba(30,58,138,.18), rgba(127,29,29,.12))",
+          }}
+        >
+          <div style={{ color: "#93c5fd", fontSize: "12px", fontWeight: 900, letterSpacing: ".16em", textTransform: "uppercase" }}>
+            Custom Orders & Questions
+          </div>
+          <h2 style={{ margin: "8px 0 0", color: "#fff", fontSize: "clamp(26px, 4vw, 36px)", lineHeight: 1.1 }}>
+            Want something special or have questions?
+          </h2>
+          <p style={{ margin: "12px 0 20px", color: "rgba(255,255,255,.75)", lineHeight: 1.6 }}>
+            Tell us what you have in mind. Custom ideas, personalization questions, special requests, and order questions are welcome.
+          </p>
+
+          <form action="https://formsubmit.co/veteranvoiceradio@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="Veteran Voice Radio Shop Question / Custom Request" />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px" }}>
+              <label style={{ display: "grid", gap: "6px", color: "#fff", fontWeight: 800 }}>
+                Name
+                <input required name="name" type="text" style={{ minHeight: "46px", borderRadius: "10px", border: "1px solid rgba(255,255,255,.18)", background: "rgba(2,6,23,.72)", color: "#fff", padding: "0 12px", fontSize: "16px" }} />
+              </label>
+              <label style={{ display: "grid", gap: "6px", color: "#fff", fontWeight: 800 }}>
+                Email
+                <input required name="email" type="email" style={{ minHeight: "46px", borderRadius: "10px", border: "1px solid rgba(255,255,255,.18)", background: "rgba(2,6,23,.72)", color: "#fff", padding: "0 12px", fontSize: "16px" }} />
+              </label>
+            </div>
+
+            <label style={{ display: "grid", gap: "6px", marginTop: "12px", color: "#fff", fontWeight: 800 }}>
+              What can we help with?
+              <select name="request_type" defaultValue="Custom item" style={{ minHeight: "46px", borderRadius: "10px", border: "1px solid rgba(255,255,255,.18)", background: "#0f172a", color: "#fff", padding: "0 12px", fontSize: "16px" }}>
+                <option>Custom item</option>
+                <option>Wall decor question</option>
+                <option>Dog bandana question</option>
+                <option>Existing order question</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label style={{ display: "grid", gap: "6px", marginTop: "12px", color: "#fff", fontWeight: 800 }}>
+              Message
+              <textarea required name="message" rows={5} style={{ resize: "vertical", borderRadius: "10px", border: "1px solid rgba(255,255,255,.18)", background: "rgba(2,6,23,.72)", color: "#fff", padding: "12px", fontSize: "16px", lineHeight: 1.5 }} />
+            </label>
+
+            <button type="submit" style={{ width: "100%", minHeight: "52px", marginTop: "16px", border: 0, borderRadius: "12px", background: "linear-gradient(90deg, #dc2626, #2563eb)", color: "#fff", fontSize: "16px", fontWeight: 950, cursor: "pointer" }}>
+              Send to Veteran Voice Radio
+            </button>
+            <p style={{ margin: "10px 0 0", textAlign: "center", color: "rgba(255,255,255,.52)", fontSize: "12px" }}>
+              Messages are sent to veteranvoiceradio@gmail.com.
+            </p>
+          </form>
+        </section>
+      )}
     </div>
   );
 }
