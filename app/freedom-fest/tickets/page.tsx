@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 const PRESALE = {
   veteran: "https://buy.stripe.com/7sY6oIbjHbM39ApaLOfbq04",
   general: "https://buy.stripe.com/4gM4gAfzXcQ7bIxf24fbq05",
+  sponsor: "https://donate.stripe.com/6oU00k9bzg2jaEtg68fbq0b",
 };
 
 const DOOR = {
   veteran: "https://buy.stripe.com/14AaEY2Nb7vN9Apg68fbq06",
   general: "https://buy.stripe.com/cNi5kE2Nb17p4g57zCfbq07",
+  sponsor: "https://donate.stripe.com/14AdRa73r9DV7sh5rufbq0a",
 };
 
 function easternDateKey(date: Date) {
@@ -42,6 +44,7 @@ export default function FreedomFestTicketsPage() {
   const links = eventDayPricing ? DOOR : PRESALE;
   const veteranPrice = eventDayPricing ? 10 : 5;
   const generalPrice = eventDayPricing ? 15 : 10;
+  const sponsorPrice = eventDayPricing ? 10 : 5;
 
   return (
     <main className="ticketPage">
@@ -52,7 +55,7 @@ export default function FreedomFestTicketsPage() {
           padding: 44px 20px 80px;
         }
         .ticketWrap {
-          width: min(980px, 100%);
+          width: min(1080px, 100%);
           margin: 0 auto;
         }
         .ticketHero {
@@ -112,6 +115,14 @@ export default function FreedomFestTicketsPage() {
           background: linear-gradient(145deg, rgba(78,14,20,.84), rgba(7,10,18,.94));
           border-color: rgba(248,113,113,.35);
         }
+        .ticketSponsor {
+          grid-column: 1 / -1;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(37,99,235,.28), transparent 40%),
+            radial-gradient(circle at 100% 100%, rgba(220,38,38,.24), transparent 42%),
+            rgba(7,10,18,.94);
+          border-color: rgba(147,197,253,.42);
+        }
         .ticketLabel {
           color: rgba(255,255,255,.68);
           font-size: 12px;
@@ -134,6 +145,10 @@ export default function FreedomFestTicketsPage() {
           margin-top: 18px;
           color: rgba(255,255,255,.78);
           line-height: 1.55;
+        }
+        .ticketSponsor .ticketCopy {
+          min-height: 0;
+          max-width: 780px;
         }
         .ticketBuy {
           display: flex;
@@ -173,6 +188,7 @@ export default function FreedomFestTicketsPage() {
         }
         @media (max-width: 720px) {
           .ticketGrid { grid-template-columns: 1fr; }
+          .ticketSponsor { grid-column: auto; }
           .ticketCard { padding: 24px; }
           .ticketCopy { min-height: 0; }
         }
@@ -215,6 +231,18 @@ export default function FreedomFestTicketsPage() {
             </p>
             <a className="ticketBuy" href={links.general} target="_blank" rel="noreferrer">
               Buy General Admission
+            </a>
+          </article>
+
+          <article className="ticketCard ticketSponsor">
+            <div className="ticketLabel">Can&apos;t Attend? Send Someone Who Served.</div>
+            <div className="ticketPrice">${sponsorPrice}</div>
+            <div className="ticketEach">sponsors one veteran or first responder admission</div>
+            <p className="ticketCopy">
+              Purchase a ticket even if you cannot come. Veteran Voice Radio will give the sponsored admission to a veteran or first responder so they can attend Freedom Fest. You can increase the quantity during Stripe checkout if you would like to sponsor more than one person.
+            </p>
+            <a className="ticketBuy" href={links.sponsor} target="_blank" rel="noreferrer">
+              Sponsor a Veteran or First Responder
             </a>
           </article>
         </section>
