@@ -2,9 +2,24 @@
 
 import { useEffect, useState } from "react";
 
+const bandanaImageCodes = new Set([
+  "B01",
+  "B02",
+  "B03",
+  "B04",
+  "B05",
+  "B06",
+  "B07",
+  "B12",
+  "B13",
+  "B14",
+]);
+
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const isBandana = columns === 4 && rows === 5;
-  const visibleDesigns = isBandana ? designs.slice(0, 10) : designs;
+  const visibleDesigns = isBandana
+    ? designs.filter(([code]) => bandanaImageCodes.has(code))
+    : designs;
   const total = visibleDesigns.length;
   const [index, setIndex] = useState(0);
   const resolvedAspect = stageAspect || (isBandana ? "4 / 5" : "1 / 1");
@@ -18,13 +33,9 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
   }, [total]);
 
   const [code, name] = visibleDesigns[index];
-  const dogSpriteColumns = 2;
-  const dogSpriteRows = 5;
-  const spriteColumn = index % dogSpriteColumns;
-  const spriteRow = Math.floor(index / dogSpriteColumns);
-  const spriteX = spriteColumn * 100;
-  const spriteY = dogSpriteRows > 1 ? (spriteRow / (dogSpriteRows - 1)) * 100 : 0;
-  const designImage = `/shop/wall/${code}.avif`;
+  const designImage = isBandana
+    ? `/images/dog/${code.toLowerCase()}.jpg`
+    : `/shop/wall/${code}.avif`;
 
   const previous = () => setIndex((current) => (current - 1 + total) % total);
   const next = () => setIndex((current) => (current + 1) % total);
@@ -68,35 +79,22 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
           margin: "0 auto",
         }}
       >
-        {isBandana ? (
-          <div
-            role="img"
-            aria-label={`${code} — ${name}; dog wearing the bandanna`}
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: "url(/api/shop/dog-bandanas)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: `${dogSpriteColumns * 100}% ${dogSpriteRows * 100}%`,
-              backgroundPosition: `${spriteX}% ${spriteY}%`,
-            }}
-          />
-        ) : (
-          <img
-            src={designImage}
-            alt={`${code} — ${name}`}
-            draggable="false"
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "block",
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-            }}
-          />
-        )}
+        <img
+          key={designImage}
+          src={designImage}
+          alt={isBandana ? `${code} — ${name}; dog wearing the bandanna` : `${code} — ${name}`}
+          draggable="false"
+          loading="eager"
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "block",
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            userSelect: "none",
+          }}
+        />
 
         <button type="button" className="shopCarouselArrow shopCarouselPrev" onClick={previous} aria-label="Previous design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>‹</button>
         <button type="button" className="shopCarouselArrow shopCarouselNext" onClick={next} aria-label="Next design" style={{ width: 40, height: 52, fontSize: 34, zIndex: 2 }}>›</button>
@@ -116,7 +114,7 @@ export default function ShopCarousel({ image, designs, columns, rows, label, sta
       </div>
 
       <p className="shopCarouselTimer">
-        {isBandana ? "10 dog-photo previews from the current set. " : ""}Automatically advances every 10 seconds. Use the arrows or dots anytime.
+        {isBandana ? `${total} dog-photo previews from the uploaded product images. ` : ""}Automatically advances every 10 seconds. Use the arrows or dots anytime.
       </p>
     </div>
   );
