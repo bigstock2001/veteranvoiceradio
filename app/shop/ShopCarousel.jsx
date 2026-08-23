@@ -2,24 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-const bandanaImageCodes = new Set([
-  "B01",
-  "B02",
-  "B03",
-  "B04",
-  "B05",
-  "B06",
-  "B07",
-  "B12",
-  "B13",
-  "B14",
-]);
-
 export default function ShopCarousel({ image, designs, columns, rows, label, stageAspect }) {
   const isBandana = columns === 4 && rows === 5;
-  const visibleDesigns = isBandana
-    ? designs.filter(([code]) => bandanaImageCodes.has(code))
-    : designs;
+  const visibleDesigns = designs;
   const total = visibleDesigns.length;
   const [index, setIndex] = useState(0);
   const resolvedAspect = stageAspect || (isBandana ? "4 / 5" : "1 / 1");
