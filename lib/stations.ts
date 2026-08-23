@@ -14,7 +14,9 @@ export type Station = {
   };
 };
 
-export const STATIONS: Station[] = [
+// Keep every station configuration here so temporarily inactive stations can
+// be restored without rebuilding their data.
+export const ALL_STATIONS: Station[] = [
   {
     slug: "semper-fi-country",
     name: "Semper Fi Country",
@@ -45,12 +47,18 @@ export const STATIONS: Station[] = [
   },
 ];
 
+// Stations currently shown throughout the public site.
+// Ranger Rockwave is temporarily offline while it is being updated.
+export const STATIONS: Station[] = ALL_STATIONS.filter(
+  (station) => station.slug !== "ranger-rockwave",
+);
+
 /**
- * Helper used by station pages
- * Keeps page code clean and readable
+ * Helper used by station pages.
+ * Searches all saved stations, including temporarily inactive ones.
  */
 export function getStation(slug: string): Station {
-  const station = STATIONS.find((s) => s.slug === slug);
+  const station = ALL_STATIONS.find((s) => s.slug === slug);
   if (!station) {
     throw new Error(`Station not found: ${slug}`);
   }

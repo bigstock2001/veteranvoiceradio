@@ -1,0 +1,1 @@
+High-resolution bandana product photos B01-B10 are stored alongside this file as WebP assets and used by the shop carousel.
