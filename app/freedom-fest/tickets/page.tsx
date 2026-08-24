@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 const PRESALE = {
   veteran: "https://buy.stripe.com/7sY6oIbjHbM39ApaLOfbq04",
@@ -28,8 +35,24 @@ function easternDateKey(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
+function trackMeta(event: string, params: Record<string, unknown>) {
+  if (typeof window !== "undefined" && typeof window.fbq === "function") {
+    window.fbq("track", event, params);
+  }
+}
+
+function preserveCampaignParams(url: string, query: URLSearchParams) {
+  const destination = new URL(url);
+  ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach((key) => {
+    const value = query.get(key);
+    if (value) destination.searchParams.set(key, value);
+  });
+  return destination.toString();
+}
+
 export default function FreedomFestTicketsPage() {
   const [eventDayPricing, setEventDayPricing] = useState(false);
+  const [campaignQuery, setCampaignQuery] = useState("");
 
   useEffect(() => {
     const updatePricing = () => {
@@ -37,6 +60,16 @@ export default function FreedomFestTicketsPage() {
     };
 
     updatePricing();
+    setCampaignQuery(window.location.search);
+
+    trackMeta("ViewContent", {
+      content_name: "Freedom Fest 2026 Tickets",
+      content_category: "Event Tickets",
+      content_ids: ["freedom_fest_2026"],
+      content_type: "product",
+      currency: "USD",
+    });
+
     const timer = window.setInterval(updatePricing, 30_000);
     return () => window.clearInterval(timer);
   }, []);
@@ -45,6 +78,36 @@ export default function FreedomFestTicketsPage() {
   const veteranPrice = eventDayPricing ? 10 : 5;
   const generalPrice = eventDayPricing ? 15 : 10;
   const sponsorPrice = eventDayPricing ? 10 : 5;
+  const pricePeriod = eventDayPricing ? "door" : "presale";
+
+  const trackedLinks = useMemo(() => {
+    const query = new URLSearchParams(campaignQuery);
+    return {
+      veteran: preserveCampaignParams(links.veteran, query),
+      general: preserveCampaignParams(links.general, query),
+      sponsor: preserveCampaignParams(links.sponsor, query),
+    };
+  }, [campaignQuery, links]);
+
+  function beginCheckout(ticketType: string, value: number) {
+    const params = {
+      content_name: "Freedom Fest 2026",
+      content_category: "Event Ticket",
+      content_ids: [`freedom_fest_2026_${ticketType}_${pricePeriod}`],
+      content_type: "product",
+      currency: "USD",
+      value,
+    };
+
+    trackMeta("InitiateCheckout", params);
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "begin_checkout", {
+        currency: "USD",
+        value,
+        items: [{ item_id: `freedom_fest_2026_${ticketType}_${pricePeriod}`, item_name: "Freedom Fest 2026" }],
+      });
+    }
+  }
 
   return (
     <main className="ticketPage">
@@ -217,7 +280,13 @@ export default function FreedomFestTicketsPage() {
             <p className="ticketCopy">
               Select the number of tickets during Stripe checkout. You will also choose Veteran / Active Military or First Responder.
             </p>
-            <a className="ticketBuy" href={links.veteran} target="_blank" rel="noreferrer">
+            <a
+              className="ticketBuy"
+              href={trackedLinks.veteran}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => beginCheckout("veteran_first_responder", veteranPrice)}
+            >
               Buy Discounted Tickets
             </a>
           </article>
@@ -229,7 +298,13 @@ export default function FreedomFestTicketsPage() {
             <p className="ticketCopy">
               General admission for Freedom Fest. Select the number of tickets you need during Stripe checkout.
             </p>
-            <a className="ticketBuy" href={links.general} target="_blank" rel="noreferrer">
+            <a
+              className="ticketBuy"
+              href={trackedLinks.general}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => beginCheckout("general_admission", generalPrice)}
+            >
               Buy General Admission
             </a>
           </article>
@@ -241,7 +316,13 @@ export default function FreedomFestTicketsPage() {
             <p className="ticketCopy">
               Purchase a ticket even if you cannot come. Veteran Voice Radio will give the sponsored admission to a veteran or first responder so they can attend Freedom Fest. You can increase the quantity during Stripe checkout if you would like to sponsor more than one person.
             </p>
-            <a className="ticketBuy" href={links.sponsor} target="_blank" rel="noreferrer">
+            <a
+              className="ticketBuy"
+              href={trackedLinks.sponsor}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => beginCheckout("sponsored_admission", sponsorPrice)}
+            >
               Sponsor a Veteran or First Responder
             </a>
           </article>
