@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 
 declare global {
@@ -17,7 +17,7 @@ const LABELS: Record<string, string> = {
   sponsored_admission: "Sponsored Veteran / First Responder Admission",
 };
 
-export default function FreedomFestTicketSuccessPage() {
+function TicketSuccessContent() {
   const searchParams = useSearchParams();
 
   const sessionId = searchParams.get("session_id") || "";
@@ -105,5 +105,21 @@ export default function FreedomFestTicketSuccessPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function FreedomFestTicketSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-[70vh] text-white">
+          <section className="container pagePad">
+            <p className="text-center text-white/75">Confirming your Freedom Fest purchase…</p>
+          </section>
+        </main>
+      }
+    >
+      <TicketSuccessContent />
+    </Suspense>
   );
 }
