@@ -18,7 +18,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
+  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "1046042381561742";
 
   return (
     <html lang="en">
