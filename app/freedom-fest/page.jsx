@@ -158,32 +158,32 @@ export default function FreedomFestPage() {
         <SectionTitle>Vendor & Booth Registration</SectionTitle>
         <div className="ffVendorGrid">
           <div className="ffCard ffCardRed">
-            <h3>Vendor Space — Payment First</h3>
+            <h3>Join Us as a Freedom Fest Vendor</h3>
             <p>
-              Your purchase is for <strong>the vendor spot only</strong>. <strong>Tables and electricity are not included.</strong>
+              We&apos;d love to have your business, organization, or creative work represented at Freedom Fest. Reserve your vendor space and complete your registration in one simple process.
             </p>
             <p>
-              Vendor registration now starts with payment. The vendor information form is no longer available before checkout.
+              Your registration includes <strong>vendor space only</strong>. <strong>Tables and electricity are not included.</strong>
             </p>
             <a href={STRIPE_PAYMENT_LINK} className="ffButton ffButtonRed ffButtonFull" style={{ marginTop:22 }}>
-              Pay for Vendor Space
+              Register & Reserve Your Vendor Space
             </a>
-            <div className="ffNote">Secure payment is completed through Stripe.</div>
+            <div className="ffNote">You&apos;ll securely reserve your space through Stripe, then complete your vendor details.</div>
           </div>
 
           <div className="ffCard ffCardGreen">
-            <h3>How Vendor Registration Works</h3>
+            <h3>Simple Vendor Registration</h3>
             <div className="ffStep">
               <div className="ffStepNum">1</div>
-              <div className="ffStepText"><strong>Pay through Stripe</strong><span>Complete the vendor-space payment first.</span></div>
+              <div className="ffStepText"><strong>Register & reserve your space</strong><span>Use our secure Stripe checkout to confirm your vendor spot.</span></div>
             </div>
             <div className="ffStep">
               <div className="ffStepNum">2</div>
-              <div className="ffStepText"><strong>Stripe sends you to the vendor form</strong><span>The form opens only after a successful checkout return.</span></div>
+              <div className="ffStepText"><strong>Tell us about your booth</strong><span>After checkout, you&apos;ll go directly to the vendor information form.</span></div>
             </div>
             <div className="ffStep">
               <div className="ffStepNum">3</div>
-              <div className="ffStepText"><strong>Submit your booth information</strong><span>Your registration email includes the Stripe Checkout session reference so the Freedom Fest team can tie the form to the payment.</span></div>
+              <div className="ffStepText"><strong>You&apos;re registered</strong><span>Once your vendor details are submitted, the Freedom Fest team will have your paid registration and booth information together.</span></div>
             </div>
             <p style={{ marginTop:22 }}>
               Have your business name, contact information, vendor type, products or services, and any website or social link ready.
@@ -200,7 +200,7 @@ export default function FreedomFestPage() {
           and the voices Veteran Voice Radio exists to serve.
         </p>
         <div className="ffBottomActions">
-          <a href={STRIPE_PAYMENT_LINK} className="ffButton ffButtonRed">Pay for Vendor Space</a>
+          <a href={STRIPE_PAYMENT_LINK} className="ffButton ffButtonRed">Register & Reserve Vendor Space</a>
           <a href="/freedom-fest/tickets" className="ffButton ffButtonGhost">Purchase Event Tickets</a>
         </div>
       </section>
