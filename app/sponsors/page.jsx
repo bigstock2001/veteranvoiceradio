@@ -43,7 +43,7 @@ function AudiencePill({ text }) {
   );
 }
 
-function TierCard({ title, price, note, perks, highlight }) {
+function TierCard({ title, price, note, perks, highlight, paymentLink }) {
   return (
     <div
       className={[
@@ -73,6 +73,15 @@ function TierCard({ title, price, note, perks, highlight }) {
           </li>
         ))}
       </ul>
+
+      <a
+        href={paymentLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-5 py-3 font-bold text-white shadow-lg transition hover:bg-red-700"
+      >
+        Sponsor Now — {price}
+      </a>
     </div>
   );
 }
@@ -153,6 +162,7 @@ export default function SponsorshipPage() {
           <TierCard
             title="🇺🇸 Freedom Partner"
             price="$6,500"
+            paymentLink="https://buy.stripe.com/eVq4gAfzX3fx9Apg68fbq0d"
             highlight
             perks={[
               "Main stage banner placement",
@@ -167,6 +177,7 @@ export default function SponsorshipPage() {
           <TierCard
             title="🥇 Gold Sponsor"
             price="$4,500"
+            paymentLink="https://buy.stripe.com/7sY4gAcnL03lcMB07afbq0e"
             perks={[
               "Stage signage",
               "Booth space",
@@ -178,6 +189,7 @@ export default function SponsorshipPage() {
           <TierCard
             title="🥈 Silver Sponsor"
             price="$2,500"
+            paymentLink="https://buy.stripe.com/3cIfZigE19DV5k9cTWfbq0f"
             perks={[
               "Shared signage",
               "Radio mention",
@@ -188,6 +200,7 @@ export default function SponsorshipPage() {
           <TierCard
             title="⭐ Patriot Sponsor"
             price="$500"
+            paymentLink="https://buy.stripe.com/dRm3cw9bz8zRdQF1befbq0g"
             perks={[
               "Sponsor board listing",
               "Event recognition",
