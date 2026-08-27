@@ -74,14 +74,21 @@ function TierCard({ title, price, note, perks, highlight, paymentLink }) {
         ))}
       </ul>
 
-      <a
-        href={paymentLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-5 py-3 font-bold text-white shadow-lg transition hover:bg-red-700"
-      >
-        Sponsor Now — {price}
-      </a>
+      <div className="mt-8 border-t border-white/10 pt-6">
+        <a
+          href={paymentLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          role="button"
+          aria-label={`Pay for ${title}`}
+          className="flex w-full items-center justify-center rounded-2xl border-2 border-white bg-red-600 px-6 py-4 text-center text-lg font-extrabold uppercase tracking-wide text-white shadow-[0_10px_30px_rgba(220,38,38,.45)] transition hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-[0_14px_36px_rgba(220,38,38,.55)] focus:outline-none focus:ring-4 focus:ring-red-400/40"
+        >
+          Sponsor This Level — {price}
+        </a>
+        <p className="mt-3 text-center text-xs font-medium text-white/70">
+          Secure payment powered by Stripe
+        </p>
+      </div>
     </div>
   );
 }
