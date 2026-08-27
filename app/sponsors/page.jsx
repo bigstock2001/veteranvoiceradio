@@ -4,7 +4,6 @@ export const metadata = {
     "Partner with Veteran Voice Radio to support veterans through music, media, and community.",
 };
 
-/* Shared red/white/blue glass style */
 const GLASS_STYLE = {
   backgroundColor: "rgba(8,12,22,.82)",
   backgroundImage:
@@ -13,6 +12,28 @@ const GLASS_STYLE = {
   WebkitBackdropFilter: "blur(14px)",
   border: "1px solid rgba(255,255,255,.18)",
   borderRadius: "16px",
+};
+
+const SPONSOR_BUTTON_STYLE = {
+  display: "flex",
+  width: "100%",
+  minHeight: "58px",
+  alignItems: "center",
+  justifyContent: "center",
+  marginTop: "24px",
+  padding: "14px 20px",
+  border: "2px solid #ffffff",
+  borderRadius: "14px",
+  background: "linear-gradient(135deg, #dc2626, #b91c1c)",
+  color: "#ffffff",
+  fontSize: "18px",
+  fontWeight: 900,
+  letterSpacing: ".04em",
+  textAlign: "center",
+  textTransform: "uppercase",
+  textDecoration: "none",
+  boxShadow: "0 10px 28px rgba(220,38,38,.45)",
+  cursor: "pointer",
 };
 
 function SectionHeader({ children }) {
@@ -26,9 +47,7 @@ function SectionHeader({ children }) {
 function StatCard({ title, value, sub }) {
   return (
     <div className="rounded-2xl border border-white/15 bg-black/40 p-6 text-center shadow-sm backdrop-blur">
-      <div className="text-sm uppercase tracking-wider text-white/80">
-        {title}
-      </div>
+      <div className="text-sm uppercase tracking-wider text-white/80">{title}</div>
       <div className="mt-2 text-3xl font-bold text-white">{value}</div>
       {sub && <div className="mt-2 text-sm text-white/70">{sub}</div>}
     </div>
@@ -46,60 +65,74 @@ function AudiencePill({ text }) {
 function TierCard({ title, price, note, perks, highlight, paymentLink }) {
   return (
     <div
-      className={[
-        "rounded-2xl border p-6 shadow-sm backdrop-blur",
-        highlight
-          ? "border-red-500/60 bg-black/50"
-          : "border-white/15 bg-black/40",
-      ].join(" ")}
+      style={{
+        borderRadius: "18px",
+        border: highlight ? "1px solid rgba(239,68,68,.65)" : "1px solid rgba(255,255,255,.15)",
+        background: highlight ? "rgba(0,0,0,.52)" : "rgba(0,0,0,.42)",
+        padding: "24px",
+        boxShadow: "0 10px 30px rgba(0,0,0,.28)",
+        backdropFilter: "blur(10px)",
+      }}
     >
-      <div className="flex items-start justify-between gap-4">
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16px" }}>
         <div>
-          <h3 className="text-2xl font-bold text-white">{title}</h3>
-          <p className="mt-1 text-sm text-white/70">
+          <h3 style={{ margin: 0, fontSize: "24px", fontWeight: 800, color: "#fff" }}>{title}</h3>
+          <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,.72)" }}>
             {note || "Sponsorship Tier"}
           </p>
         </div>
-        <div className="rounded-xl border border-white/15 bg-black/60 px-4 py-2 text-lg font-semibold text-white">
+        <div
+          style={{
+            borderRadius: "12px",
+            border: "1px solid rgba(255,255,255,.15)",
+            background: "rgba(0,0,0,.6)",
+            padding: "9px 14px",
+            fontSize: "18px",
+            fontWeight: 700,
+            color: "#fff",
+            whiteSpace: "nowrap",
+          }}
+        >
           {price}
         </div>
       </div>
 
-      <ul className="mt-5 space-y-2 text-white">
+      <ul style={{ marginTop: "20px", color: "#fff", lineHeight: 1.5 }}>
         {perks.map((perk) => (
-          <li key={perk} className="flex gap-2">
-            <span className="mt-1 inline-block h-2 w-2 rounded-full bg-red-400" />
-            <span>{perk}</span>
-          </li>
+          <li key={perk}>{perk}</li>
         ))}
       </ul>
 
-      <div className="mt-8 border-t border-white/10 pt-6">
-        <a
-          href={paymentLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          role="button"
-          aria-label={`Pay for ${title}`}
-          className="flex w-full items-center justify-center rounded-2xl border-2 border-white bg-red-600 px-6 py-4 text-center text-lg font-extrabold uppercase tracking-wide text-white shadow-[0_10px_30px_rgba(220,38,38,.45)] transition hover:-translate-y-0.5 hover:bg-red-700 hover:shadow-[0_14px_36px_rgba(220,38,38,.55)] focus:outline-none focus:ring-4 focus:ring-red-400/40"
-        >
-          Sponsor This Level — {price}
-        </a>
-        <p className="mt-3 text-center text-xs font-medium text-white/70">
-          Secure payment powered by Stripe
-        </p>
-      </div>
+      <a
+        href={paymentLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        role="button"
+        aria-label={`Pay for ${title}`}
+        className="btn btnBig"
+        style={SPONSOR_BUTTON_STYLE}
+      >
+        Sponsor This Level — {price}
+      </a>
+
+      <p
+        style={{
+          margin: "10px 0 0",
+          textAlign: "center",
+          fontSize: "13px",
+          fontWeight: 600,
+          color: "rgba(255,255,255,.72)",
+        }}
+      >
+        Secure payment powered by Stripe
+      </p>
     </div>
   );
 }
 
 export default function SponsorshipPage() {
   return (
-<main
-  className="min-h-screen text-white"
-  style={{ color: "rgba(255,255,255,.92)" }}
->
-      {/* HERO */}
+    <main className="min-h-screen text-white" style={{ color: "rgba(255,255,255,.92)" }}>
       <section className="container pagePad text-center">
         <SectionHeader>Sponsorship Opportunities</SectionHeader>
 
@@ -108,25 +141,17 @@ export default function SponsorshipPage() {
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#sponsorship-levels"
-            className="rounded-xl bg-red-600 px-6 py-3 font-semibold shadow hover:bg-red-700 transition"
-          >
+          <a href="#sponsorship-levels" className="btn btnPrimary btnBig">
             View Sponsorship Levels
           </a>
-          <a
-            href="#contact"
-            className="rounded-xl border border-white/20 bg-black/40 px-6 py-3 font-semibold hover:bg-black/60 transition"
-          >
+          <a href="#contact" className="btn btnGhost btnBig">
             Become a Partner
           </a>
         </div>
       </section>
 
-      {/* ABOUT */}
       <section className="container section">
         <SectionHeader>About the Event</SectionHeader>
-
         <p className="mt-6 text-white/90 leading-relaxed max-w-4xl">
           Spring Freedom Fling is a mission-driven community music festival
           presented by Veteran Voice Radio, a nonprofit dedicated to amplifying
@@ -134,10 +159,8 @@ export default function SponsorshipPage() {
         </p>
       </section>
 
-      {/* AUDIENCE */}
       <section className="container section">
         <SectionHeader>Who Your Business Reaches</SectionHeader>
-
         <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             "Veterans & Military Families",
@@ -150,10 +173,8 @@ export default function SponsorshipPage() {
         </div>
       </section>
 
-      {/* STATS */}
       <section className="container section">
         <SectionHeader>Current Media Reach</SectionHeader>
-
         <div className="mt-6 grid md:grid-cols-3 gap-6">
           <StatCard title="Radio Sessions" value="3,000+" />
           <StatCard title="Unique Listeners" value="180+" />
@@ -161,11 +182,16 @@ export default function SponsorshipPage() {
         </div>
       </section>
 
-      {/* TIERS */}
       <section id="sponsorship-levels" className="container section">
         <SectionHeader>Sponsorship Levels</SectionHeader>
-
-        <div className="mt-8 grid lg:grid-cols-2 gap-6">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "24px",
+            marginTop: "32px",
+          }}
+        >
           <TierCard
             title="🇺🇸 Freedom Partner"
             price="$6,500"
@@ -185,52 +211,33 @@ export default function SponsorshipPage() {
             title="🥇 Gold Sponsor"
             price="$4,500"
             paymentLink="https://buy.stripe.com/7sY4gAcnL03lcMB07afbq0e"
-            perks={[
-              "Stage signage",
-              "Booth space",
-              "Radio mentions",
-              "VIP passes",
-            ]}
+            perks={["Stage signage", "Booth space", "Radio mentions", "VIP passes"]}
           />
 
           <TierCard
             title="🥈 Silver Sponsor"
             price="$2,500"
             paymentLink="https://buy.stripe.com/3cIfZigE19DV5k9cTWfbq0f"
-            perks={[
-              "Shared signage",
-              "Radio mention",
-              "Social media thank-you",
-            ]}
+            perks={["Shared signage", "Radio mention", "Social media thank-you"]}
           />
 
           <TierCard
             title="⭐ Patriot Sponsor"
             price="$500"
             paymentLink="https://buy.stripe.com/dRm3cw9bz8zRdQF1befbq0g"
-            perks={[
-              "Sponsor board listing",
-              "Event recognition",
-              "Website sponsor listing",
-            ]}
+            perks={["Sponsor board listing", "Event recognition", "Website sponsor listing"]}
           />
         </div>
       </section>
 
-      {/* CONTACT */}
       <section id="contact" className="container section text-center">
         <SectionHeader>Let’s Partner</SectionHeader>
-
         <p className="mt-6 text-white/90 max-w-2xl mx-auto">
           Supporting Spring Freedom Fling means supporting veterans, creative
           healing, and a mission-driven community.
         </p>
-
         <div className="mt-8">
-          <a
-            href="mailto:info@veteranvoiceradio.com"
-            className="rounded-xl bg-red-600 px-6 py-3 font-semibold hover:bg-red-700 transition"
-          >
+          <a href="mailto:info@veteranvoiceradio.com" className="btn btnPrimary btnBig">
             Email Us About Sponsorship info@veteranvoiceradio.com or donald.l.dunn@gmail.com
           </a>
         </div>
